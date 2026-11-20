@@ -98,37 +98,68 @@ export default function Asocijacije({ onExit, preset }: { onExit?: () => void; p
     <main className="screen">
       <GameHeader title="Asocijacije" timeLeft={timeLeft} timeLimit={timeLimit} onExit={onExit} />
 
-      <div className="asoc-grid">
-        {board.columns.map((col, c) => (
-          <div key={c} className="asoc-column">
-            {col.fields.map((f, i) => (
-              <button
-                key={i}
-                className={`asoc-field ${f ? "open" : ""}`}
-                disabled={!!f || finished || busy}
-                onClick={() => open(c, i)}
-              >
-                {f ?? `${LETTERS[c]}${i + 1}`}
-              </button>
-            ))}
-            <button
-              className={`asoc-solution ${col.solved ? "solved" : ""} ${target === c ? "selected" : ""}`}
-              disabled={col.solved || finished}
-              onClick={() => setTarget(c)}
-            >
-              {col.solution ?? `Kolona ${LETTERS[c]}`}
-            </button>
-          </div>
-        ))}
+      {/* Raspored kao na TV-u: A i B gore, C i D dole, konačno rešenje u sredini */}
+      <div className="asoc-board">
+        <div className="asoc-grid">
+          {[0, 1].map((c) => {
+            const col = board.columns[c];
+            return (
+              <div key={c} className={`asoc-column ${c >= 2 ? "bottom" : ""}`}>
+                {col.fields.map((f, i) => (
+                  <button
+                    key={i}
+                    className={`asoc-field ${f ? "open" : ""}`}
+                    disabled={!!f || finished || busy}
+                    onClick={() => open(c, i)}
+                  >
+                    {f ?? `${LETTERS[c]}${i + 1}`}
+                  </button>
+                ))}
+                <button
+                  className={`asoc-solution ${col.solved ? "solved" : ""} ${target === c ? "selected" : ""}`}
+                  disabled={col.solved || finished}
+                  onClick={() => setTarget(c)}
+                >
+                  {col.solution ?? `Kolona ${LETTERS[c]}`}
+                </button>
+              </div>
+            );
+          })}
+        </div>
+        <button
+          className={`asoc-final ${board.final && board.score > 0 ? "solved" : ""} ${target === "final" ? "selected" : ""}`}
+          disabled={finished}
+          onClick={() => setTarget("final")}
+        >
+          {board.final ?? "Konačno rešenje"}
+        </button>
+        <div className="asoc-grid">
+          {[2, 3].map((c) => {
+            const col = board.columns[c];
+            return (
+              <div key={c} className={`asoc-column ${c >= 2 ? "bottom" : ""}`}>
+                {col.fields.map((f, i) => (
+                  <button
+                    key={i}
+                    className={`asoc-field ${f ? "open" : ""}`}
+                    disabled={!!f || finished || busy}
+                    onClick={() => open(c, i)}
+                  >
+                    {f ?? `${LETTERS[c]}${i + 1}`}
+                  </button>
+                ))}
+                <button
+                  className={`asoc-solution ${col.solved ? "solved" : ""} ${target === c ? "selected" : ""}`}
+                  disabled={col.solved || finished}
+                  onClick={() => setTarget(c)}
+                >
+                  {col.solution ?? `Kolona ${LETTERS[c]}`}
+                </button>
+              </div>
+            );
+          })}
+        </div>
       </div>
-
-      <button
-        className={`asoc-final ${board.final && board.score > 0 ? "solved" : ""} ${target === "final" ? "selected" : ""}`}
-        disabled={finished}
-        onClick={() => setTarget("final")}
-      >
-        {board.final ?? "Konačno rešenje"}
-      </button>
 
       {finished ? (
         <div className="result">

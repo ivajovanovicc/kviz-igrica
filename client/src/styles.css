@@ -196,3 +196,8 @@ button:disabled { cursor: default; opacity: 0.5; }
 .turn-banner.mine { background: rgba(255, 210, 63, 0.25); color: var(--accent); }
 .last-action { text-align: center; font-size: 0.9rem; opacity: 0.85; margin: -4px 0 10px; }
 .asoc-solution.solved-opp, .asoc-final.solved-opp { background: #c0603a; color: #fff; opacity: 1; }
+
+/* Asocijacije: konačno rešenje u sredini */
+.asoc-board { display: grid; gap: 10px; }
+.asoc-column.bottom { display: flex; flex-direction: column-reverse; gap: 6px; }
+.asoc-board .asoc-final { margin-top: 0; }
