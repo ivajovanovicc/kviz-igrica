@@ -7,7 +7,7 @@ import { POINTS_PER_PAIR, Puzzle } from "../games/spojnice/routes.js";
 // - u drugoj polovini je obrnuto (B spaja, A pokušava promašene)
 // - 2 poena po paru, za onoga ko ga je spojio
 
-export const MOVE_SECONDS = 10;
+export const MOVE_SECONDS = 6;
 export const REVEAL_PAUSE_MS = 3500;
 
 type Phase = "main" | "steal" | "reveal";

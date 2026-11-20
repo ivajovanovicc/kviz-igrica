@@ -25,7 +25,7 @@ Zatim otvori http://localhost:5173 u browseru.
 - **Slagalica**: duža ispravna reč nosi 2 poena po slovu (iste dužine: oba igrača dobijaju poene).
 - **Moj broj**: tačan broj 10 poena; ako niko nije pogodio, bliži dobija 5.
 - **Skočko, Ko zna zna**: svako dobija poene koje je sam osvojio.
-- **Spojnice** se igraju na smenu, u dve polovine sa različitim temama: jedan igrač spaja redom (jedan pokušaj po pojmu, 10 s),
+- **Spojnice** se igraju na smenu, u dve polovine sa različitim temama: jedan igrač spaja redom (jedan pokušaj po pojmu, 6 s),
   a promašene parove zatim pokušava protivnik. U drugoj polovini je obrnuto. 2 poena po paru.
 - **Asocijacije** se igraju na smenu, na zajedničkoj tabli: igrač na potezu otvori polje, pa pogađa ili predaje potez.
   Tačan odgovor: ostaje na potezu. Promašaj ili isteklo vreme (15 s): potez prelazi na protivnika.

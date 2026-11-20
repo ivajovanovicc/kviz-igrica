@@ -66,54 +66,44 @@ export default function SpojniceDuel({ names }: { names: string[] }) {
   else status = `Na potezu je ${names[state.actor]}${state.phase === "steal" ? " (pokušava promašene)" : ""}.`;
 
   return (
-    <main className="screen">
+    <main className="screen spojnice-duel">
       <header className="game-header">
         <span className="header-spacer" />
         <h2>Spojnice {state.half + 1}/2</h2>
         <span className={`timer ${left <= 3 && playing ? "low" : ""}`}>{playing ? `${left}s` : ""}</span>
       </header>
       <div className="timebar">
-        <div style={{ width: `${playing ? (left / 10) * 100 : 0}%` }} />
+        <div style={{ width: `${playing ? (left / 6) * 100 : 0}%` }} />
       </div>
 
       <div className={`turn-banner ${myTurn ? "mine" : ""}`}>{status}</div>
       {state.lastAction && <p className="last-action">{state.lastAction}</p>}
       <p className="theme">{state.tema}</p>
 
-      <div className="pairs">
-        <div className="pair-column">
-          {state.left.map((l, i) => {
-            const by = state.solvedBy[i];
-            const cls = by !== null ? owner(by) : state.answers ? "wrong" : i === state.current ? "active" : "";
-            return (
-              <div key={i} className={`pair-item ${cls}`}>
+      {/* Svaki red: levi pojam i desni pojam jedan pored drugog */}
+      <div className="pairs-rows">
+        {state.left.map((l, i) => {
+          const by = state.solvedBy[i];
+          const cls = by !== null ? owner(by) : state.answers ? "wrong" : i === state.current ? "active" : "";
+          return (
+            <div key={i} className="pair-row">
+              <div className={`pair-item ${cls}`}>
                 {l}
                 {state.answers && by === null && <small className="pair-answer">→ {state.right[state.answers[i]]}</small>}
               </div>
-            );
-          })}
-        </div>
-        <div className="pair-column">
-          {state.right.map((r, i) => (
-            <button
-              key={i}
-              className={`pair-item pair-button ${owner(state.rightOwner[i])}`}
-              disabled={!myTurn || state.rightOwner[i] !== null}
-              onClick={() => pick(i)}
-            >
-              {r}
-            </button>
-          ))}
-        </div>
+              <button
+                className={`pair-item pair-button ${owner(state.rightOwner[i])}`}
+                disabled={!myTurn || state.rightOwner[i] !== null}
+                onClick={() => pick(i)}
+              >
+                {state.right[i]}
+              </button>
+            </div>
+          );
+        })}
       </div>
 
       {error && <p className="error center">{error}</p>}
-      <div className="kzz-meta">
-        <span>Ti: {state.points[state.you]}</span>
-        <span>
-          {names[1 - state.you]}: {state.points[1 - state.you]}
-        </span>
-      </div>
       {state.finished && <p className="waiting-note">Rezultat uskoro…</p>}
     </main>
   );

@@ -56,6 +56,7 @@ export default function Match({ mode, code, name, onExit }: { mode: "create" | "
   const [current, setCurrent] = useState<GameStart | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
+  const [turnPlayer, setTurnPlayer] = useState<number | null>(null); // ko je na potezu u igrama na smenu
   const codeRef = useRef<string | undefined>(code);
   const creatingRef = useRef(false);
 
@@ -85,12 +86,17 @@ export default function Match({ mode, code, name, onExit }: { mode: "create" | "
       setState(s);
       setActiveMatch(s.phase === "finished" ? null : s.code);
     };
-    const onGameStart = (g: GameStart) => setCurrent(g);
-    const onAsocState = (a: unknown) => {
-      asocStore.last = a;
+    const onGameStart = (g: GameStart) => {
+      setCurrent(g);
+      setTurnPlayer(null);
     };
-    const onSpojniceState = (a: unknown) => {
+    const onAsocState = (a: any) => {
+      asocStore.last = a;
+      setTurnPlayer(a.finished ? null : a.turn);
+    };
+    const onSpojniceState = (a: any) => {
       spojniceStore.last = a;
+      setTurnPlayer(a.finished || a.phase === "reveal" ? null : a.actor);
     };
 
     socket.on("match:state", onState);
@@ -126,18 +132,19 @@ export default function Match({ mode, code, name, onExit }: { mode: "create" | "
   if (!state) return <main className="screen">Povezivanje…</main>;
 
   const me = state.players[state.you];
+  const onTurn = (i: number) => state.phase === "playing" && turnPlayer === i;
   const opp = state.players[1 - state.you];
 
   const scoreboard = (
     <div className="scoreboard">
-      <div className="score-player">
+      <div className={`score-player ${onTurn(state.you) ? "on-turn" : ""}`}>
         <span className="score-name">{me.name} (ti)</span>
         <span className="score-total">{me.total}</span>
       </div>
       <div className="score-middle">
         {state.round ? `${state.roundIndex + 1}/${state.gameCount}` : ""}
       </div>
-      <div className="score-player right">
+      <div className={`score-player right ${onTurn(1 - state.you) ? "on-turn" : ""}`}>
         <span className="score-name">
           {opp ? opp.name : "…"} {opp && !opp.connected && <em className="offline">(nije povezan)</em>}
         </span>
