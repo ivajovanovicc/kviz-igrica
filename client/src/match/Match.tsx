@@ -5,7 +5,8 @@ import MojBroj from "../games/moj-broj/MojBroj";
 import Spojnice from "../games/spojnice/Spojnice";
 import Skocko from "../games/skocko/Skocko";
 import KoZnaZna from "../games/ko-zna-zna/KoZnaZna";
-import Asocijacije from "../games/asocijacije/Asocijacije";
+import AsocijacijeDuel from "./AsocijacijeDuel";
+import { asocStore } from "./asocStore";
 
 type GameId = "slagalica" | "moj-broj" | "spojnice" | "skocko" | "ko-zna-zna" | "asocijacije";
 
@@ -86,15 +87,20 @@ export default function Match({ mode, code, name, onExit }: { mode: "create" | "
       setActiveMatch(s.phase === "finished" ? null : s.code);
     };
     const onGameStart = (g: GameStart) => setCurrent(g);
+    const onAsocState = (a: unknown) => {
+      asocStore.last = a;
+    };
 
     socket.on("match:state", onState);
     socket.on("game:start", onGameStart);
+    socket.on("asoc:state", onAsocState);
     socket.on("connect", enter); // i posle prekida veze se automatski vraća u partiju
     if (socket.connected) enter();
 
     return () => {
       socket.off("match:state", onState);
       socket.off("game:start", onGameStart);
+      socket.off("asoc:state", onAsocState);
       socket.off("connect", enter);
     };
   }, [mode, code, name]);
@@ -253,7 +259,7 @@ export default function Match({ mode, code, name, onExit }: { mode: "create" | "
       ) : game.game === "ko-zna-zna" ? (
         <KoZnaZna key={game.roundIndex} preset={game.config} />
       ) : (
-        <Asocijacije key={game.roundIndex} preset={game.config} />
+        <AsocijacijeDuel key={game.roundIndex} names={state.players.map((p) => p.name)} />
       )}
     </div>
   );

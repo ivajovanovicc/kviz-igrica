@@ -24,7 +24,10 @@ Zatim otvori http://localhost:5173 u browseru.
 - Oba igrača dobijaju isti zadatak u isto vreme.
 - **Slagalica**: duža ispravna reč nosi 2 poena po slovu (iste dužine: oba igrača dobijaju poene).
 - **Moj broj**: tačan broj 10 poena; ako niko nije pogodio, bliži dobija 5.
-- **Spojnice, Skočko, Ko zna zna, Asocijacije**: svako dobija poene koje je sam osvojio.
+- **Spojnice, Skočko, Ko zna zna**: svako dobija poene koje je sam osvojio.
+- **Asocijacije** se igraju na smenu, na zajedničkoj tabli: igrač na potezu otvori polje, pa pogađa ili predaje potez.
+  Tačan odgovor: ostaje na potezu. Promašaj ili isteklo vreme (15 s): potez prelazi na protivnika.
+  Prvi igra onaj ko ima manje poena. Cela igra traje najviše 4 minuta.
 - Ako igrač osveži stranicu, vraća se u istu partiju.
 
 Na lokalnom računaru link radi samo na tom računaru. Za igru sa nekim preko interneta igricu treba postaviti na hosting.

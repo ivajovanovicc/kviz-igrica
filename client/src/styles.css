@@ -190,3 +190,9 @@ button:disabled { cursor: default; opacity: 0.5; }
 .history td { padding: 8px 6px; border-bottom: 1px solid rgba(255, 255, 255, 0.12); }
 .history td:not(:first-child) { text-align: right; font-weight: 700; width: 60px; }
 .history thead td { opacity: 0.75; font-weight: 600; font-size: 0.85rem; }
+
+/* Asocijacije u dvoje */
+.turn-banner { text-align: center; padding: 10px; border-radius: 12px; background: var(--panel); margin-bottom: 10px; font-weight: 600; }
+.turn-banner.mine { background: rgba(255, 210, 63, 0.25); color: var(--accent); }
+.last-action { text-align: center; font-size: 0.9rem; opacity: 0.85; margin: -4px 0 10px; }
+.asoc-solution.solved-opp, .asoc-final.solved-opp { background: #c0603a; color: #fff; opacity: 1; }

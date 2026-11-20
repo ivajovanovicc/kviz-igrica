@@ -7,6 +7,7 @@ import { skockoModule } from "../games/skocko/routes.js";
 import { koZnaZnaModule } from "../games/ko-zna-zna/routes.js";
 import { asocijacijeModule } from "../games/asocijacije/routes.js";
 import { GAME_ORDER, GameId, scoreRound } from "./rules.js";
+import { AsocDuel } from "./asocDuel.js";
 
 // Partija u dvoje: dva igrača igraju istih šest igara, istim redom, sa istim zadacima.
 
@@ -38,6 +39,7 @@ interface Round {
   results: (GameResult | null)[];
   points: [number, number] | null;
   watchdog?: NodeJS.Timeout;
+  duel?: AsocDuel; // Asocijacije se u dvoje igraju na smenu
 }
 
 type Phase = "waiting" | "starting" | "playing" | "round-result" | "finished";
@@ -101,16 +103,44 @@ export function setupMatches(io: Server) {
     io.to(p.socketId).emit("game:start", {
       roundIndex: match.rounds.length - 1,
       game: round.game,
-      config: round.configs[playerIndex],
+      config: round.duel ? { duel: true } : round.configs[playerIndex],
     });
+    if (round.duel) io.to(p.socketId).emit("asoc:state", { ...round.duel.view(), you: playerIndex });
+  }
+
+  function emitDuel(match: Match, round: Round) {
+    match.players.forEach((p, i) => {
+      if (p.socketId && round.duel) io.to(p.socketId).emit("asoc:state", { ...round.duel.view(), you: i });
+    });
+  }
+
+  function startDuel(match: Match, round: Round) {
+    // Prvi igra onaj ko ima manje poena (kod nerešenog: igrač koji je napravio partiju)
+    const first = match.players[1].total < match.players[0].total ? 1 : 0;
+    round.duel = new AsocDuel(
+      asocijacijeModule.generate(),
+      first,
+      match.players.map((p) => p.name),
+      () => emitDuel(match, round),
+      (points) => points.forEach((pts, i) => onResult(match, round, i, { points: pts }))
+    );
   }
 
   function startRound(match: Match) {
     const game = GAME_ORDER[match.rounds.length];
     const mod = MODULES[game];
-    const puzzle = mod.generate();
     const round: Round = { game, gameIds: [], configs: [], results: [null, null], points: null };
     match.rounds.push(round);
+
+    if (game === "asocijacije") {
+      match.phase = "playing";
+      startDuel(match, round);
+      broadcast(match);
+      match.players.forEach((_, i) => sendGameStart(match, i));
+      return;
+    }
+
+    const puzzle = mod.generate();
 
     match.players.forEach((_, i) => {
       const config = mod.createSession(puzzle, (result) => onResult(match, round, i, result));
@@ -196,6 +226,21 @@ export function setupMatches(io: Server) {
       broadcast(match);
       setTimeout(() => startRound(match), START_DELAY_MS);
     });
+
+    // Potezi u Asocijacijama na smenu
+    const duelAction = (fn: (duel: AsocDuel, player: number) => string | null) => (cb?: (r: unknown) => void) => {
+      const match = matches.get(socket.data.matchCode);
+      const round = match?.rounds[match.rounds.length - 1];
+      const error = round?.duel ? fn(round.duel, socket.data.playerIndex) : "Igra nije u toku.";
+      if (typeof cb === "function") cb({ error });
+    };
+    socket.on("asoc:open", ({ column, field } = {}, cb) =>
+      duelAction((d, p) => d.open(p, column, field))(cb)
+    );
+    socket.on("asoc:guess", ({ target, answer } = {}, cb) =>
+      duelAction((d, p) => d.guess(p, target, answer))(cb)
+    );
+    socket.on("asoc:pass", (_ = {}, cb) => duelAction((d, p) => d.pass(p))(cb));
 
     socket.on("disconnect", () => {
       const match = matches.get(socket.data.matchCode);
