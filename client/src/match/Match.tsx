@@ -148,14 +148,14 @@ export default function Match({ mode, code, name, onExit }: { mode: "create" | "
 
   const scoreboard = (
     <div className="scoreboard">
-      <div className={`score-player ${onTurn(state.you) ? "on-turn" : ""}`}>
+      <div className={`score-player color-p${state.you} ${onTurn(state.you) ? "on-turn" : ""}`}>
         <span className="score-name">{me.name} (ti)</span>
         <span className="score-total">{me.total}</span>
       </div>
       <div className="score-middle">
         {state.round ? `${state.roundIndex + 1}/${state.gameCount}` : ""}
       </div>
-      <div className={`score-player right ${onTurn(1 - state.you) ? "on-turn" : ""}`}>
+      <div className={`score-player right color-p${1 - state.you} ${onTurn(1 - state.you) ? "on-turn" : ""}`}>
         <span className="score-name">
           {opp ? opp.name : "…"} {opp && !opp.connected && <em className="offline">(nije povezan)</em>}
         </span>
@@ -241,12 +241,12 @@ export default function Match({ mode, code, name, onExit }: { mode: "create" | "
         {scoreboard}
         <h2 className="title small">{roundLabel(state.roundIndex, r.game)}</h2>
         <div className="round-result">
-          <div>
+          <div className={`color-p${state.you}`}>
             <span className="score-name">Ti</span>
             <span className="round-points">{signed(myPts)}</span>
             <small>{detailText(r.game, r.details?.[state.you] ?? null)}</small>
           </div>
-          <div>
+          <div className={`color-p${1 - state.you}`}>
             <span className="score-name">{opp?.name}</span>
             <span className="round-points">{signed(oppPts)}</span>
             <small>{detailText(r.game, r.details?.[1 - state.you] ?? null)}</small>

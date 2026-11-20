@@ -60,7 +60,8 @@ export default function AsocijacijeDuel({ names }: { names: string[] }) {
   const myTurn = state.turn === state.you && !state.finished;
   const canOpen = myTurn && state.phase === "open";
   const canGuess = myTurn && state.phase === "guess";
-  const ownerClass = (by: number | null) => (by === null ? "" : by === state.you ? "solved" : "solved-opp");
+  // boja igrača koji je rešio: igrač 1 plav, igrač 2 crven
+  const ownerClass = (by: number | null) => (by === null ? "" : `owner-p${by}`);
 
   const guess = (target: Target, answer: string) => {
     if (!answer.trim()) return;

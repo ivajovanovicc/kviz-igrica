@@ -240,3 +240,19 @@ form.editing input {
   font: inherit; font-size: 1rem; color: var(--bg2); padding: 4px 6px; text-align: center;
 }
 .answer-ok { border: none; border-radius: 7px; background: var(--accent); color: var(--bg2); font-weight: 800; padding: 0 10px; }
+
+/* Boje igrača u igri u dvoje: igrač 1 (napravio partiju) plav, igrač 2 crven */
+:root { --p0: #2f6fed; --p1: #e0434f; }
+.owner-p0 { background: var(--p0) !important; color: #fff !important; opacity: 1 !important; }
+.owner-p1 { background: var(--p1) !important; color: #fff !important; opacity: 1 !important; }
+.owner-both { background: linear-gradient(90deg, var(--p0) 50%, var(--p1) 50%) !important; color: #fff !important; opacity: 1 !important; }
+.pair-item.missed { background: rgba(255, 255, 255, 0.12); color: rgba(255, 255, 255, 0.75); }
+.option.correct-mark { box-shadow: 0 0 0 4px var(--accent); }
+.check-mark { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); font-weight: 800; }
+.score-player.color-p0 .score-name, .score-player.color-p1 .score-name { font-weight: 700; }
+.score-player.color-p0 { border-left: 5px solid var(--p0); }
+.score-player.color-p1 { border-right: 5px solid var(--p1); }
+.score-player.right.color-p0 { border-left: none; border-right: 5px solid var(--p0); }
+.score-player:not(.right).color-p1 { border-right: none; border-left: 5px solid var(--p1); }
+.round-result > .color-p0 { border-top: 5px solid var(--p0); }
+.round-result > .color-p1 { border-top: 5px solid var(--p1); }

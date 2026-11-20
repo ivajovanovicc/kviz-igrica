@@ -54,7 +54,8 @@ export default function SpojniceDuel({ names }: { names: string[] }) {
 
   const playing = state.phase !== "reveal" && !state.finished;
   const myTurn = playing && state.actor === state.you;
-  const owner = (by: number | null) => (by === null ? "" : by === state.you ? "correct" : "correct-opp");
+  // boja igrača koji je spojio: igrač 1 plav, igrač 2 crven
+  const owner = (by: number | null) => (by === null ? "" : `owner-p${by}`);
 
   const pick = (right: number) => {
     getSocket().emit("spojnice:pick", { right }, (r: { error?: string | null }) => {
@@ -88,7 +89,7 @@ export default function SpojniceDuel({ names }: { names: string[] }) {
         {state.left.map((l, i) => {
           const by = state.solvedBy[i];
           const cls =
-            by !== null ? owner(by) : state.missed[i] || state.answers ? "wrong" : i === state.current ? "active" : "";
+            by !== null ? owner(by) : state.missed[i] || state.answers ? "missed" : i === state.current ? "active" : "";
           return (
             <div key={i} className="pair-row">
               <div className={`pair-item ${cls}`}>

@@ -88,15 +88,26 @@ export default function KoZnaZnaDuel({ names }: { names: string[] }) {
       <div className="question">{state.question}</div>
       <div className="options">
         {state.options.map((o, i) => {
+          const me = state.you;
+          const them = 1 - state.you;
+          const pickedByMe = state.myAnswer === i;
+          const pickedByThem = reveal && state.opponentAnswer === i;
           let cls = "";
-          if (reveal && i === state.correct) cls = "highlight";
-          else if (reveal && i === state.myAnswer) cls = "wrong";
-          else if (!reveal && i === state.myAnswer) cls = "chosen";
-          const oppMark = reveal && i === state.opponentAnswer;
+          if (reveal && i === state.correct) {
+            // tačan odgovor: boja igrača koji je dobio 10 poena, inače žuto
+            const winner = state.deltas ? state.deltas.findIndex((d) => d > 0) : -1;
+            cls = winner >= 0 ? `owner-p${winner} correct-mark` : "highlight";
+          } else if (pickedByMe && pickedByThem) {
+            cls = "owner-both";
+          } else if (pickedByMe) {
+            cls = `owner-p${me}`;
+          } else if (pickedByThem) {
+            cls = `owner-p${them}`;
+          }
           return (
             <button key={i} className={`option ${cls}`} disabled={answered || reveal} onClick={() => answer(i)}>
               {o}
-              {oppMark && <span className="opp-mark">{opp}</span>}
+              {cls.includes("correct-mark") && <span className="check-mark">✓</span>}
             </button>
           );
         })}
