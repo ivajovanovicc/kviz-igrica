@@ -31,6 +31,24 @@ slagalicaRouter.post("/new", (_req, res) => {
   res.json(createSession(randomLetters()));
 });
 
+function validTiles(tiles: unknown): tiles is number[] {
+  return (
+    Array.isArray(tiles) &&
+    tiles.length <= LETTER_COUNT &&
+    new Set(tiles).size === tiles.length &&
+    tiles.every((t) => Number.isInteger(t) && t >= 0 && t < LETTER_COUNT)
+  );
+}
+
+// Provera tokom igre (bez završavanja): da li reč od izabranih pločica postoji u rečniku
+slagalicaRouter.post("/:id/check", (req, res) => {
+  const game = store.get(req.params.id);
+  if (!game) return res.status(404).json({ error: "Igra ne postoji." });
+  const tiles: unknown = req.body?.tiles;
+  if (!validTiles(tiles) || tiles.length === 0) return res.status(400).json({ error: "Neispravan izbor slova." });
+  res.json({ exists: isWord(tiles.map((t) => game.letters[t]).join("")) });
+});
+
 // Igrač šalje redne brojeve pločica koje je izabrao, npr. [3, 0, 7]
 slagalicaRouter.post("/:id/submit", (req, res) => {
   const game = store.get(req.params.id);

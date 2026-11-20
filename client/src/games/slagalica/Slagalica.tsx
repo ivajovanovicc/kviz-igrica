@@ -53,6 +53,23 @@ export default function Slagalica({ onExit, preset }: { onExit?: () => void; pre
     }
   }, [config, picked, busy]);
 
+  // Kad igrač 2 sekunde ne menja reč, proveri da li postoji u rečniku
+  const [check, setCheck] = useState<{ key: string; exists: boolean } | null>(null);
+  const pickedKey = picked.join(",");
+  useEffect(() => {
+    if (!config || result || picked.length < 2) return;
+    const t = setTimeout(async () => {
+      try {
+        const r = await post<{ exists: boolean }>(`/api/slagalica/${config.gameId}/check`, { tiles: picked });
+        setCheck({ key: pickedKey, exists: r.exists });
+      } catch {
+        /* provera nije bitna za tok igre */
+      }
+    }, 2000);
+    return () => clearTimeout(t);
+  }, [pickedKey, config, result]); // eslint-disable-line react-hooks/exhaustive-deps
+  const checkInfo = check && check.key === pickedKey && !result ? check : null;
+
   const timeLeft = useCountdown(config?.timeLimitSeconds ?? 60, !!config && !result, submit, config?.gameId);
 
   if (error) {
@@ -89,6 +106,11 @@ export default function Slagalica({ onExit, preset }: { onExit?: () => void; pre
         <span>{word || "Složi reč…"}</span>
         <span className="expression-value">{picked.length ? `${picked.length} slova` : ""}</span>
       </div>
+      {checkInfo && (
+        <p className={`word-check ${checkInfo.exists ? "ok" : "bad"}`}>
+          {checkInfo.exists ? "✓ Reč postoji" : "✗ Ta reč nije u rečniku (0 poena)"}
+        </p>
+      )}
 
       {result ? (
         <div className="result">
