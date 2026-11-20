@@ -6,12 +6,12 @@ import { pickRandom, readData, shuffle } from "../../shared/data.js";
 export const TIME_LIMIT_SECONDS = 60;
 export const POINTS_PER_PAIR = 2;
 
-interface SpojniceSet {
+export interface SpojniceSet {
   tema: string;
   parovi: [string, string][];
 }
 
-interface Puzzle {
+export interface Puzzle {
   set: SpojniceSet;
   order: number[]; // order[k] = koji par stoji na k-tom mestu desno
 }
@@ -25,8 +25,9 @@ interface SpojniceSession extends BaseSession {
 const sets = readData<SpojniceSet[]>("spojnice/spojnice.json");
 const store = new SessionStore<SpojniceSession>(TIME_LIMIT_SECONDS);
 
-function generate(): Puzzle {
-  const set = pickRandom(sets);
+export function generate(exceptTema?: string): Puzzle {
+  const pool = sets.filter((s) => s.tema !== exceptTema);
+  const set = pickRandom(pool.length ? pool : sets);
   return { set, order: shuffle(set.parovi.map((_, i) => i)) };
 }
 

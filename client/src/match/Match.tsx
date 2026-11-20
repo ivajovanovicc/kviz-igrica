@@ -2,11 +2,11 @@ import { useEffect, useRef, useState } from "react";
 import { getSocket, playerToken, setActiveMatch } from "../shared/socket";
 import Slagalica from "../games/slagalica/Slagalica";
 import MojBroj from "../games/moj-broj/MojBroj";
-import Spojnice from "../games/spojnice/Spojnice";
 import Skocko from "../games/skocko/Skocko";
 import KoZnaZna from "../games/ko-zna-zna/KoZnaZna";
 import AsocijacijeDuel from "./AsocijacijeDuel";
-import { asocStore } from "./asocStore";
+import { asocStore, spojniceStore } from "./asocStore";
+import SpojniceDuel from "./SpojniceDuel";
 
 type GameId = "slagalica" | "moj-broj" | "spojnice" | "skocko" | "ko-zna-zna" | "asocijacije";
 
@@ -48,7 +48,6 @@ function detailText(game: GameId, d: Record<string, unknown> | null): string {
   if (game === "slagalica") return d.word ? `${upper(String(d.word))} (${d.length} slova)` : "bez reči";
   if (game === "moj-broj") return d.value === null || d.value === undefined ? "bez rezultata" : `${d.value} (razlika ${d.distance})`;
   if (game === "skocko") return d.attempts ? `pogođeno iz ${d.attempts}. pokušaja` : "nije pogođeno";
-  if (game === "spojnice") return `${d.correct} tačnih parova`;
   return "";
 }
 
@@ -90,10 +89,14 @@ export default function Match({ mode, code, name, onExit }: { mode: "create" | "
     const onAsocState = (a: unknown) => {
       asocStore.last = a;
     };
+    const onSpojniceState = (a: unknown) => {
+      spojniceStore.last = a;
+    };
 
     socket.on("match:state", onState);
     socket.on("game:start", onGameStart);
     socket.on("asoc:state", onAsocState);
+    socket.on("spojnice:state", onSpojniceState);
     socket.on("connect", enter); // i posle prekida veze se automatski vraća u partiju
     if (socket.connected) enter();
 
@@ -101,6 +104,7 @@ export default function Match({ mode, code, name, onExit }: { mode: "create" | "
       socket.off("match:state", onState);
       socket.off("game:start", onGameStart);
       socket.off("asoc:state", onAsocState);
+      socket.off("spojnice:state", onSpojniceState);
       socket.off("connect", enter);
     };
   }, [mode, code, name]);
@@ -253,7 +257,7 @@ export default function Match({ mode, code, name, onExit }: { mode: "create" | "
       ) : game.game === "moj-broj" ? (
         <MojBroj key={game.roundIndex} preset={game.config} />
       ) : game.game === "spojnice" ? (
-        <Spojnice key={game.roundIndex} preset={game.config} />
+        <SpojniceDuel key={game.roundIndex} names={state.players.map((p) => p.name)} />
       ) : game.game === "skocko" ? (
         <Skocko key={game.roundIndex} preset={game.config} />
       ) : game.game === "ko-zna-zna" ? (
