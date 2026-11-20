@@ -12,6 +12,7 @@ export const REVEAL_MS = 2500;
 interface Answer {
   option: number | null; // null = preskočeno
   delta: number;
+  ms: number | null; // koliko je igraču trebalo da odgovori (meri server)
 }
 
 export interface KzzDuelView {
@@ -26,6 +27,8 @@ export interface KzzDuelView {
   correct: number | null; // samo u fazi prikaza
   opponentAnswer: number | null | undefined; // samo u fazi prikaza
   deltas: [number, number] | null; // poeni za ovo pitanje, samo u fazi prikaza
+  myMs: number | null; // moje vreme odgovora
+  times: [number | null, number | null] | null; // vremena oba igrača, samo u fazi prikaza
   points: [number, number];
   finished: boolean;
 }
@@ -36,6 +39,7 @@ export class KzzDuel {
   private answers: (Answer | undefined)[] = [undefined, undefined];
   private firstCorrectTaken = false;
   private endsAt = 0;
+  private startedAt = 0;
   private points: [number, number] = [0, 0];
   private finished = false;
   private timer?: NodeJS.Timeout;
@@ -54,7 +58,8 @@ export class KzzDuel {
     this.phase = "question";
     this.answers = [undefined, undefined];
     this.firstCorrectTaken = false;
-    this.endsAt = Date.now() + this.secondsPerQuestion * 1000;
+    this.startedAt = Date.now();
+    this.endsAt = this.startedAt + this.secondsPerQuestion * 1000;
     clearTimeout(this.timer);
     this.timer = setTimeout(() => this.reveal(), this.secondsPerQuestion * 1000);
   }
@@ -63,7 +68,7 @@ export class KzzDuel {
     if (this.phase !== "question") return;
     clearTimeout(this.timer);
     // ko nije odgovorio, računa se kao preskočeno
-    this.answers = this.answers.map((a) => a ?? { option: null, delta: 0 });
+    this.answers = this.answers.map((a) => a ?? { option: null, delta: 0, ms: null });
     this.phase = "reveal";
     this.onChange();
     this.timer = setTimeout(() => {
@@ -85,14 +90,15 @@ export class KzzDuel {
     if (this.answers[player]) return "Već si odgovorio/la.";
 
     const q = this.puzzle[this.index];
+    const ms = Date.now() - this.startedAt;
     let a: Answer;
     if (Number.isInteger(option) && (option as number) >= 0 && (option as number) < q.options.length) {
       const correct = option === q.correct;
       const delta = correct ? (this.firstCorrectTaken ? 0 : POINTS_CORRECT) : POINTS_WRONG;
       if (correct) this.firstCorrectTaken = true;
-      a = { option: option as number, delta };
+      a = { option: option as number, delta, ms };
     } else {
-      a = { option: null, delta: 0 };
+      a = { option: null, delta: 0, ms: null };
     }
     this.answers[player] = a;
     this.points[player] += a.delta;
@@ -127,6 +133,8 @@ export class KzzDuel {
       correct: revealed ? q.correct : null,
       opponentAnswer: revealed && theirs ? theirs.option : undefined,
       deltas: revealed ? [this.answers[0]?.delta ?? 0, this.answers[1]?.delta ?? 0] : null,
+      myMs: mine ? mine.ms : null,
+      times: revealed ? [this.answers[0]?.ms ?? null, this.answers[1]?.ms ?? null] : null,
       points: [...this.points] as [number, number],
       finished: this.finished,
     };

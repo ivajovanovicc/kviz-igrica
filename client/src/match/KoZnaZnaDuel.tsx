@@ -17,12 +17,17 @@ interface State {
   correct: number | null;
   opponentAnswer: number | null | undefined;
   deltas: [number, number] | null;
+  myMs: number | null;
+  times: [number | null, number | null] | null;
   points: [number, number];
   finished: boolean;
   you: number;
 }
 
 const SECONDS = 10;
+
+// vreme odgovora: sekunde i dve stotinke, npr. 2,37
+const fmtTime = (ms: number) => (ms / 1000).toFixed(2).replace(".", ",");
 
 export default function KoZnaZnaDuel({ names }: { names: string[] }) {
   const [state, setState] = useState<State | null>(null);
@@ -94,9 +99,9 @@ export default function KoZnaZnaDuel({ names }: { names: string[] }) {
           const pickedByThem = reveal && state.opponentAnswer === i;
           let cls = "";
           if (reveal && i === state.correct) {
-            // tačan odgovor: boja igrača koji je dobio 10 poena, inače žuto
+            // tačan odgovor: polje se puni bojom igrača koji je bio brži (i tačan), inače žuto
             const winner = state.deltas ? state.deltas.findIndex((d) => d > 0) : -1;
-            cls = winner >= 0 ? `owner-p${winner} correct-mark` : "highlight";
+            cls = winner >= 0 ? `fill-p${winner} correct-mark` : "highlight";
           } else if (pickedByMe && pickedByThem) {
             cls = "owner-both";
           } else if (pickedByMe) {
@@ -104,10 +109,22 @@ export default function KoZnaZnaDuel({ names }: { names: string[] }) {
           } else if (pickedByThem) {
             cls = `owner-p${them}`;
           }
+          // značke sa vremenom odgovora
+          const badges: { player: number; ms: number | null }[] = [];
+          if (pickedByMe) badges.push({ player: me, ms: reveal ? state.times?.[me] ?? null : state.myMs });
+          if (pickedByThem) badges.push({ player: them, ms: state.times?.[them] ?? null });
           return (
             <button key={i} className={`option ${cls}`} disabled={answered || reveal} onClick={() => answer(i)}>
-              {o}
-              {cls.includes("correct-mark") && <span className="check-mark">✓</span>}
+              <span className="option-text">{o}</span>
+              {badges.length > 0 && (
+                <span className="time-badges">
+                  {badges.map((b) => (
+                    <span key={b.player} className={`time-badge badge-p${b.player}`}>
+                      {b.ms !== null ? fmtTime(b.ms) : ""}
+                    </span>
+                  ))}
+                </span>
+              )}
             </button>
           );
         })}

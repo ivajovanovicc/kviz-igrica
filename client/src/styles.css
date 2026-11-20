@@ -256,3 +256,22 @@ form.editing input {
 .score-player:not(.right).color-p1 { border-right: none; border-left: 5px solid var(--p1); }
 .round-result > .color-p0 { border-top: 5px solid var(--p0); }
 .round-result > .color-p1 { border-top: 5px solid var(--p1); }
+
+/* Ko zna zna u dvoje: vreme odgovora i punjenje tačnog polja bojom bržeg igrača */
+.option { overflow: hidden; }
+.option-text { position: relative; z-index: 1; }
+.time-badges { position: absolute; right: 8px; top: 50%; transform: translateY(-50%); display: flex; gap: 4px; z-index: 1; }
+.time-badge {
+  min-width: 46px; padding: 2px 7px; border-radius: 999px; font-size: 0.8rem; font-weight: 700;
+  background: #fff; font-variant-numeric: tabular-nums;
+}
+.badge-p0 { color: var(--p0); }
+.badge-p1 { color: var(--p1); }
+.option.fill-p0, .option.fill-p1 { opacity: 1; color: #fff; box-shadow: 0 0 0 4px var(--accent); }
+.option.fill-p0::before, .option.fill-p1::before {
+  content: ""; position: absolute; inset: 0; transform-origin: left; animation: fill-slide 0.6s ease-out forwards;
+}
+.option.fill-p0::before { background: var(--p0); }
+.option.fill-p1::before { background: var(--p1); }
+@keyframes fill-slide { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+.option.correct-mark .time-badges { right: 8px; }
