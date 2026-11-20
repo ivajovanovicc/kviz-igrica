@@ -3,11 +3,13 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { skockoRouter } from "./games/skocko/routes.js";
 import { mojBrojRouter } from "./games/moj-broj/routes.js";
+import { slagalicaRouter } from "./games/slagalica/routes.js";
 
 const app = express();
 app.use(express.json());
 
 // Svaka igra je poseban modul sa svojim rutama (modularni monolit)
+app.use("/api/slagalica", slagalicaRouter);
 app.use("/api/skocko", skockoRouter);
 app.use("/api/moj-broj", mojBrojRouter);
 

@@ -171,7 +171,7 @@ export default function MojBroj({ onExit }: { onExit: () => void }) {
                   ? `Tvoj rezultat: ${result.value} (razlika ${Math.abs(result.value - result.target)})`
                   : result.timeUp
                     ? "Vreme je isteklo."
-                    : "Nisi složio izraz."}
+                    : "Izraz nije složen."}
           </p>
           <p className="best">
             {result.best.value === result.target ? "Moguće rešenje" : `Najbliže moguće (${result.best.value})`}:{" "}

@@ -95,3 +95,13 @@ button:disabled { cursor: default; opacity: 0.5; }
 }
 .action.wide { width: 100%; margin-top: 14px; padding: 14px; font-size: 1.1rem; }
 .best { opacity: 0.9; }
+
+/* Slagalica */
+.tiles { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; }
+.tile {
+  height: 54px; border: none; border-radius: 10px; background: rgba(255, 255, 255, 0.9);
+  color: var(--bg2); font-size: 1.35rem; font-weight: 800;
+}
+.expression.word { letter-spacing: 0.08em; font-weight: 700; }
+.row-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.row-buttons .op-button { font-size: 1rem; }
