@@ -2,15 +2,18 @@ import { useState } from "react";
 import Skocko from "./games/skocko/Skocko";
 import MojBroj from "./games/moj-broj/MojBroj";
 import Slagalica from "./games/slagalica/Slagalica";
+import Spojnice from "./games/spojnice/Spojnice";
+import KoZnaZna from "./games/ko-zna-zna/KoZnaZna";
+import Asocijacije from "./games/asocijacije/Asocijacije";
 
 // Redosled igara kao u originalu
 const GAMES = [
   { id: "slagalica", name: "Slagalica", ready: true },
   { id: "moj-broj", name: "Moj broj", ready: true },
-  { id: "spojnice", name: "Spojnice", ready: false },
+  { id: "spojnice", name: "Spojnice", ready: true },
   { id: "skocko", name: "Skočko", ready: true },
-  { id: "ko-zna-zna", name: "Ko zna zna", ready: false },
-  { id: "asocijacije", name: "Asocijacije", ready: false },
+  { id: "ko-zna-zna", name: "Ko zna zna", ready: true },
+  { id: "asocijacije", name: "Asocijacije", ready: true },
 ] as const;
 
 type GameId = (typeof GAMES)[number]["id"];
@@ -18,6 +21,10 @@ type GameId = (typeof GAMES)[number]["id"];
 export default function App() {
   const [current, setCurrent] = useState<GameId | null>(null);
 
+  const exit = () => setCurrent(null);
+  if (current === "spojnice") return <Spojnice onExit={exit} />;
+  if (current === "ko-zna-zna") return <KoZnaZna onExit={exit} />;
+  if (current === "asocijacije") return <Asocijacije onExit={exit} />;
   if (current === "slagalica") return <Slagalica onExit={() => setCurrent(null)} />;
   if (current === "moj-broj") return <MojBroj onExit={() => setCurrent(null)} />;
   if (current === "skocko") return <Skocko onExit={() => setCurrent(null)} />;

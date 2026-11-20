@@ -2,7 +2,7 @@
 
 Online kviz igrica u browseru, sa šest igara: Slagalica, Moj broj, Spojnice, Skočko, Ko zna zna i Asocijacije.
 
-Trenutno rade (za jednog igrača): **Slagalica**, **Moj broj** i **Skočko**.
+Trenutno rade svih šest igara za jednog igrača. Igra u dvoje (preko linka i sa nasumičnim protivnikom) i igra protiv bota dolaze kasnije.
 
 ## Pokretanje na svom računaru
 
@@ -27,6 +27,17 @@ Server čuva tačna rešenja i proverava odgovore, da igrač ne bi mogao da vara
 - `npm test`: pokreće testove logike igara
 - `npm run build`: pravi produkcijsku verziju
 - `npm start -w server`: pokreće produkcijsku verziju na http://localhost:3001
+
+## Sadržaj igara („baza“)
+
+Za sada je sadržaj u JSON fajlovima u `server/data/`. Možeš da ih menjaš i dopunjuješ ručno:
+
+- `spojnice/spojnice.json`: teme sa po 8 parova
+- `ko-zna-zna/pitanja.json`: pitanja sa jednim tačnim i tri netačna odgovora (igra bira 10 nasumičnih)
+- `asocijacije/asocijacije.json`: 4 kolone po 4 polja + rešenja; u `prihvata` idu dodatni prihvatljivi odgovori
+
+Odgovori u Asocijacijama se prihvataju bez obzira na velika slova i kvačice (npr. „skola“ = „Škola“).
+Posle izmene fajla treba ponovo pokrenuti server.
 
 ## Rečnik za Slagalicu
 

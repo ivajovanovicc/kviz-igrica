@@ -1,0 +1,67 @@
+[
+  {
+    "tema": "Spoji pisca i delo",
+    "parovi": [
+      ["Ivo Andrić", "Na Drini ćuprija"],
+      ["Meša Selimović", "Derviš i smrt"],
+      ["Branislav Nušić", "Gospođa ministarka"],
+      ["Borisav Stanković", "Nečista krv"],
+      ["Dobrica Ćosić", "Koreni"],
+      ["Danilo Kiš", "Bašta, pepeo"],
+      ["Miloš Crnjanski", "Seobe"],
+      ["Petar II Petrović Njegoš", "Gorski vijenac"]
+    ]
+  },
+  {
+    "tema": "Spoji državu i glavni grad",
+    "parovi": [
+      ["Australija", "Kanbera"],
+      ["Kanada", "Otava"],
+      ["Brazil", "Brazilija"],
+      ["Turska", "Ankara"],
+      ["Švajcarska", "Bern"],
+      ["Maroko", "Rabat"],
+      ["Novi Zeland", "Velington"],
+      ["Kazahstan", "Astana"]
+    ]
+  },
+  {
+    "tema": "Spoji hemijski simbol i element",
+    "parovi": [
+      ["Fe", "Gvožđe"],
+      ["Au", "Zlato"],
+      ["Ag", "Srebro"],
+      ["Na", "Natrijum"],
+      ["K", "Kalijum"],
+      ["Pb", "Olovo"],
+      ["Hg", "Živa"],
+      ["Cu", "Bakar"]
+    ]
+  },
+  {
+    "tema": "Spoji kompozitora i delo",
+    "parovi": [
+      ["Antonio Vivaldi", "Četiri godišnja doba"],
+      ["Petar Iljič Čajkovski", "Labudovo jezero"],
+      ["Volfgang Amadeus Mocart", "Čarobna frula"],
+      ["Ludvig van Betoven", "Za Elizu"],
+      ["Đuzepe Verdi", "Aida"],
+      ["Žorž Bize", "Karmen"],
+      ["Johan Sebastijan Bah", "Brandenburški koncerti"],
+      ["Stevan Mokranjac", "Rukoveti"]
+    ]
+  },
+  {
+    "tema": "Spoji slikara i sliku",
+    "parovi": [
+      ["Leonardo da Vinči", "Mona Liza"],
+      ["Vinsent van Gog", "Zvezdana noć"],
+      ["Edvard Munk", "Krik"],
+      ["Pablo Pikaso", "Gernika"],
+      ["Sandro Botičeli", "Rođenje Venere"],
+      ["Paja Jovanović", "Seoba Srba"],
+      ["Uroš Predić", "Siroče na majčinom grobu"],
+      ["Salvador Dali", "Postojanost pamćenja"]
+    ]
+  }
+]

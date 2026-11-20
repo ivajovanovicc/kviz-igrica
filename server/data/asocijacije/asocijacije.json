@@ -1,0 +1,42 @@
+[
+  {
+    "kolone": [
+      { "polja": ["Pahulja", "Sneško", "Lavina", "Grudva"], "resenje": "Sneg", "prihvata": [] },
+      { "polja": ["Kalendar", "Prvi", "31 dan", "Božić"], "resenje": "Januar", "prihvata": [] },
+      { "polja": ["Štap", "Pancerice", "Staza", "Žičara"], "resenje": "Skijanje", "prihvata": ["skije"] },
+      { "polja": ["Šal", "Rukavice", "Vunena", "Šubara"], "resenje": "Kapa", "prihvata": [] }
+    ],
+    "konacno": "Zima",
+    "prihvata": []
+  },
+  {
+    "kolone": [
+      { "polja": ["Kreda", "Sunđer", "Zelena", "Šah"], "resenje": "Tabla", "prihvata": [] },
+      { "polja": ["Veliki", "Godišnji", "Zaslužen", "Pauza"], "resenje": "Odmor", "prihvata": [] },
+      { "polja": ["Petica", "Dnevnik", "Jedinica", "Prosek"], "resenje": "Ocena", "prihvata": ["ocene"] },
+      { "polja": ["Ranac", "Knjige", "Rame", "Nositi"], "resenje": "Torba", "prihvata": [] }
+    ],
+    "konacno": "Škola",
+    "prihvata": []
+  },
+  {
+    "kolone": [
+      { "polja": ["Dunav", "Korito", "Obala", "Ušće"], "resenje": "Reka", "prihvata": [] },
+      { "polja": ["Oblak", "Kišobran", "Kap", "Pljusak"], "resenje": "Kiša", "prihvata": [] },
+      { "polja": ["So", "Talas", "Plaža", "Galeb"], "resenje": "More", "prihvata": [] },
+      { "polja": ["Kocka", "Klizanje", "Santa", "Hladnjak"], "resenje": "Led", "prihvata": [] }
+    ],
+    "konacno": "Voda",
+    "prihvata": []
+  },
+  {
+    "kolone": [
+      { "polja": ["Žica", "Akord", "Električna", "Bas"], "resenje": "Gitara", "prihvata": [] },
+      { "polja": ["Bina", "Publika", "Karta", "Bis"], "resenje": "Koncert", "prihvata": [] },
+      { "polja": ["Violinski ključ", "Polovina", "Četvrtina", "Osmina"], "resenje": "Nota", "prihvata": ["note"] },
+      { "polja": ["Refren", "Strofa", "Stih", "Pevati"], "resenje": "Pesma", "prihvata": [] }
+    ],
+    "konacno": "Muzika",
+    "prihvata": []
+  }
+]

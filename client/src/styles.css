@@ -105,3 +105,53 @@ button:disabled { cursor: default; opacity: 0.5; }
 .expression.word { letter-spacing: 0.08em; font-weight: 700; }
 .row-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .row-buttons .op-button { font-size: 1rem; }
+
+/* Spojnice */
+.theme { text-align: center; font-weight: 600; margin: 0 0 12px; }
+.pairs { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.pair-column { display: grid; gap: 8px; align-content: start; }
+.pair-item {
+  min-height: 48px; padding: 8px 10px; border-radius: 10px; background: var(--panel);
+  display: flex; flex-direction: column; justify-content: center; font-size: 0.95rem; line-height: 1.2;
+}
+.pair-button { border: none; color: var(--bg2); background: rgba(255, 255, 255, 0.9); text-align: left; }
+.pair-item.active { outline: 2px solid var(--accent); }
+.pair-item.correct { background: #2a9d5c; color: #fff; opacity: 1; }
+.pair-item.wrong { background: #b23a48; }
+.pair-answer { opacity: 0.9; margin-top: 3px; }
+
+/* Ko zna zna */
+.kzz-meta { display: flex; justify-content: space-between; opacity: 0.9; margin: 12px 0; gap: 10px; }
+.question {
+  padding: 18px 16px; border-radius: 14px; background: var(--panel);
+  font-size: 1.2rem; font-weight: 600; text-align: center; min-height: 90px;
+  display: grid; place-items: center;
+}
+.options { display: grid; gap: 10px; margin-top: 14px; }
+.option {
+  padding: 14px; border: none; border-radius: 12px; background: rgba(255, 255, 255, 0.9);
+  color: var(--bg2); font-size: 1.05rem; font-weight: 600;
+}
+.option.correct { background: #2a9d5c; color: #fff; opacity: 1; }
+.option.wrong { background: #b23a48; color: #fff; opacity: 1; }
+.skip { width: 100%; margin-top: 14px; font-size: 1rem; }
+.hint { text-align: center; font-size: 0.85rem; opacity: 0.7; }
+
+/* Asocijacije */
+.asoc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.asoc-column { display: grid; gap: 6px; }
+.asoc-field, .asoc-solution, .asoc-final {
+  min-height: 40px; padding: 6px; border: none; border-radius: 9px; font-size: 0.95rem;
+  background: var(--panel); color: #fff;
+}
+.asoc-field.open { background: rgba(255, 255, 255, 0.9); color: var(--bg2); font-weight: 600; opacity: 1; }
+.asoc-solution { background: rgba(255, 210, 63, 0.18); color: var(--accent); font-weight: 700; }
+.asoc-solution.solved, .asoc-final.solved { background: #2a9d5c; opacity: 1; }
+.asoc-solution.selected, .asoc-final.selected { outline: 2px solid var(--accent); }
+.asoc-final { width: 100%; margin-top: 12px; min-height: 50px; font-size: 1.1rem; font-weight: 800; background: rgba(255, 210, 63, 0.35); }
+.asoc-final:disabled, .asoc-solution:disabled { opacity: 1; }
+.asoc-input { display: flex; gap: 8px; margin-top: 12px; }
+.asoc-input input {
+  flex: 1; min-width: 0; padding: 12px; border: none; border-radius: 12px; font: inherit; font-size: 1rem;
+}
+.give-up { display: block; margin: 6px auto 0; }
