@@ -76,7 +76,7 @@ export default function KoZnaZnaDuel({ names }: { names: string[] }) {
   }
 
   return (
-    <main className="screen">
+    <main className="screen kzz-screen">
       <header className="game-header">
         <span className="header-spacer" />
         <h2>Ko zna zna</h2>
@@ -90,6 +90,7 @@ export default function KoZnaZnaDuel({ names }: { names: string[] }) {
           Pitanje {state.index + 1} / {state.total}
         </span>
       </div>
+      <div className="kzz-center">
       <div className="question">{state.question}</div>
       <div className="options">
         {state.options.map((o, i) => {
@@ -114,18 +115,21 @@ export default function KoZnaZnaDuel({ names }: { names: string[] }) {
           if (pickedByMe) badges.push({ player: me, ms: reveal ? state.times?.[me] ?? null : state.myMs });
           if (pickedByThem) badges.push({ player: them, ms: state.times?.[them] ?? null });
           return (
-            <button key={i} className={`option ${cls}`} disabled={answered || reveal} onClick={() => answer(i)}>
-              <span className="option-text">{o}</span>
+            <div key={i} className="option-wrap">
               {badges.length > 0 && (
                 <span className="time-badges">
                   {badges.map((b) => (
                     <span key={b.player} className={`time-badge badge-p${b.player}`}>
-                      {b.ms !== null ? fmtTime(b.ms) : ""}
+                      {names[b.player]}
+                      {b.ms !== null ? ` · ${fmtTime(b.ms)}` : ""}
                     </span>
                   ))}
                 </span>
               )}
-            </button>
+              <button className={`option ${cls}`} disabled={answered || reveal} onClick={() => answer(i)}>
+                <span className="option-text">{o}</span>
+              </button>
+            </div>
           );
         })}
       </div>
@@ -135,6 +139,7 @@ export default function KoZnaZnaDuel({ names }: { names: string[] }) {
         </button>
       )}
       <p className="hint">{note}</p>
+      </div>
     </main>
   );
 }
