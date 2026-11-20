@@ -15,7 +15,8 @@ const words = new Set();
 for (const raw of lines) {
   const w = raw.trim().split("/")[0];
   // samo mala slova (bez vlastitih imena), samo srpska latinica, bar 2 slova
-  if (/^[abcčćdđefghijklmnoprsštuvzž]{2,}$/.test(w)) words.add(w);
+  // bez skraćenica: reč mora da ima samoglasnik (ili slogotvorno r, kao u „prst“)
+  if (/^[abcčćdđefghijklmnoprsštuvzž]{2,}$/.test(w) && /[aeiour]/.test(w)) words.add(w);
 }
 const sorted = [...words].sort((a, b) => a.localeCompare(b, "sr-Latn"));
 fs.writeFileSync(outPath, sorted.join("\n") + "\n");

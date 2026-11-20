@@ -5,7 +5,16 @@ import { GameResult } from "../shared/sessions.js";
 
 export type GameId = "slagalica" | "moj-broj" | "spojnice" | "skocko" | "ko-zna-zna" | "asocijacije";
 
-export const GAME_ORDER: GameId[] = ["slagalica", "moj-broj", "spojnice", "skocko", "ko-zna-zna", "asocijacije"];
+// Redosled igara u partiji u dvoje (Asocijacije se igraju dva puta)
+export const GAME_ORDER: GameId[] = [
+  "slagalica",
+  "moj-broj",
+  "skocko",
+  "ko-zna-zna",
+  "spojnice",
+  "asocijacije",
+  "asocijacije",
+];
 
 export const GAME_NAMES: Record<GameId, string> = {
   slagalica: "Slagalica",

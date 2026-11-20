@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { post } from "../../shared/api";
 import { useCountdown } from "../../shared/useCountdown";
+import AnswerBox from "../../shared/AnswerBox";
 import GameHeader from "../../shared/GameHeader";
 
 interface BoardView {
@@ -18,8 +19,7 @@ export default function Asocijacije({ onExit, preset }: { onExit?: () => void; p
   const [gameId, setGameId] = useState<string | null>(preset?.gameId ?? null);
   const [timeLimit, setTimeLimit] = useState(preset?.timeLimitSeconds ?? 120);
   const [board, setBoard] = useState<BoardView | null>(preset ?? null);
-  const [target, setTarget] = useState<Target>("final");
-  const [answer, setAnswer] = useState("");
+  const [editing, setEditing] = useState<Target | null>(null); // polje rešenja u koje se trenutno kuca
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
@@ -27,8 +27,7 @@ export default function Asocijacije({ onExit, preset }: { onExit?: () => void; p
   const start = useCallback(async () => {
     setError(null);
     setMessage(null);
-    setAnswer("");
-    setTarget("final");
+    setEditing(null);
     try {
       const r = await post<BoardView & { gameId: string; timeLimitSeconds: number }>("/api/asocijacije/new");
       setGameId(r.gameId);
@@ -67,15 +66,14 @@ export default function Asocijacije({ onExit, preset }: { onExit?: () => void; p
     }
   };
 
-  const guess = async () => {
+  const guess = async (target: Target, answer: string) => {
     if (!gameId || busy || finished || !answer.trim()) return;
     setBusy(true);
     try {
       const r = await post<BoardView & { correct: boolean }>(`/api/asocijacije/${gameId}/guess`, { target, answer });
       setBoard(r);
       setMessage(r.correct ? "Tačno!" : `„${answer.trim()}“ nije tačno.`);
-      setAnswer("");
-      if (r.correct && target !== "final") setTarget("final");
+      setEditing(null);
     } catch (e) {
       setError((e as Error).message);
     } finally {
@@ -115,24 +113,30 @@ export default function Asocijacije({ onExit, preset }: { onExit?: () => void; p
                     {f ?? `${LETTERS[c]}${i + 1}`}
                   </button>
                 ))}
-                <button
-                  className={`asoc-solution ${col.solved ? "solved" : ""} ${target === c ? "selected" : ""}`}
+                <AnswerBox
+                  className={`asoc-solution ${col.solved ? "solved" : ""}`}
+                  label={col.solution ?? `Kolona ${LETTERS[c]}`}
                   disabled={col.solved || finished}
-                  onClick={() => setTarget(c)}
-                >
-                  {col.solution ?? `Kolona ${LETTERS[c]}`}
-                </button>
+                  editing={editing === c}
+                  placeholder={`Rešenje kolone ${LETTERS[c]}…`}
+                  onStart={() => setEditing(c)}
+                  onCancel={() => setEditing(null)}
+                  onSubmit={(t) => guess(c, t)}
+                />
               </div>
             );
           })}
         </div>
-        <button
-          className={`asoc-final ${board.final && board.score > 0 ? "solved" : ""} ${target === "final" ? "selected" : ""}`}
+        <AnswerBox
+          className={`asoc-final ${board.final && board.score > 0 ? "solved" : ""}`}
+          label={board.final ?? "Konačno rešenje"}
           disabled={finished}
-          onClick={() => setTarget("final")}
-        >
-          {board.final ?? "Konačno rešenje"}
-        </button>
+          editing={editing === "final"}
+          placeholder={"Konačno rešenje…"}
+          onStart={() => setEditing("final")}
+          onCancel={() => setEditing(null)}
+          onSubmit={(t) => guess("final", t)}
+        />
         <div className="asoc-grid">
           {[2, 3].map((c) => {
             const col = board.columns[c];
@@ -148,13 +152,16 @@ export default function Asocijacije({ onExit, preset }: { onExit?: () => void; p
                     {f ?? `${LETTERS[c]}${i + 1}`}
                   </button>
                 ))}
-                <button
-                  className={`asoc-solution ${col.solved ? "solved" : ""} ${target === c ? "selected" : ""}`}
+                <AnswerBox
+                  className={`asoc-solution ${col.solved ? "solved" : ""}`}
+                  label={col.solution ?? `Kolona ${LETTERS[c]}`}
                   disabled={col.solved || finished}
-                  onClick={() => setTarget(c)}
-                >
-                  {col.solution ?? `Kolona ${LETTERS[c]}`}
-                </button>
+                  editing={editing === c}
+                  placeholder={`Rešenje kolone ${LETTERS[c]}…`}
+                  onStart={() => setEditing(c)}
+                  onCancel={() => setEditing(null)}
+                  onSubmit={(t) => guess(c, t)}
+                />
               </div>
             );
           })}
@@ -170,20 +177,6 @@ export default function Asocijacije({ onExit, preset }: { onExit?: () => void; p
         </div>
       ) : (
         <>
-          <form
-            className="asoc-input"
-            onSubmit={(e) => {
-              e.preventDefault();
-              guess();
-            }}
-          >
-            <input
-              value={answer}
-              onChange={(e) => setAnswer(e.target.value)}
-              placeholder={target === "final" ? "Konačno rešenje…" : `Rešenje kolone ${LETTERS[target]}…`}
-            />
-            <button className="action" disabled={busy || !answer.trim()}>Pogodi</button>
-          </form>
           <div className="kzz-meta">
             <span>{message ?? "Otvaraj polja i pogađaj."}</span>
             <span>{board.score} poena</span>

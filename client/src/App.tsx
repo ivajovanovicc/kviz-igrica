@@ -12,9 +12,9 @@ import { activeMatch, saveName, savedName } from "./shared/socket";
 const GAMES = [
   { id: "slagalica", name: "Slagalica" },
   { id: "moj-broj", name: "Moj broj" },
-  { id: "spojnice", name: "Spojnice" },
   { id: "skocko", name: "Skočko" },
   { id: "ko-zna-zna", name: "Ko zna zna" },
+  { id: "spojnice", name: "Spojnice" },
   { id: "asocijacije", name: "Asocijacije" },
 ] as const;
 

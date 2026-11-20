@@ -33,9 +33,17 @@ interface Result {
   timeUp?: boolean;
 }
 
-function Symbol({ value }: { value: number | undefined }) {
+function Symbol({ value, onClear }: { value: number | undefined; onClear?: () => void }) {
   if (value === undefined) return <span className="slot" />;
   const s = SYMBOLS[value];
+  if (onClear) {
+    // u aktivnom redu klik na popunjeno polje briše simbol
+    return (
+      <button className="slot filled clearable" style={{ color: s.color }} aria-label={`obriši ${s.label}`} onClick={onClear}>
+        {s.glyph}
+      </button>
+    );
+  }
   return (
     <span className="slot filled" style={{ color: s.color }} aria-label={s.label}>
       {s.glyph}
@@ -46,7 +54,7 @@ function Symbol({ value }: { value: number | undefined }) {
 export default function Skocko({ onExit, preset }: { onExit?: () => void; preset?: Config }) {
   const [config, setConfig] = useState<Config | null>(preset ?? null);
   const [rows, setRows] = useState<Row[]>([]);
-  const [current, setCurrent] = useState<number[]>([]);
+  const [current, setCurrent] = useState<(number | undefined)[]>([]); // prazno polje = undefined
   const [result, setResult] = useState<Result | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -105,14 +113,25 @@ export default function Skocko({ onExit, preset }: { onExit?: () => void; preset
     [config]
   );
 
+  // Izabrani simbol ide u prvo slobodno polje (od 1. do 4.)
   const pick = (symbol: number) => {
     if (!config || result || busy) return;
-    const next = [...current, symbol];
-    if (next.length === config.codeLength) submit(next);
-    else setCurrent(next);
+    const next = Array.from({ length: config.codeLength }, (_, j) => current[j]);
+    const free = next.findIndex((v) => v === undefined);
+    if (free === -1) return;
+    next[free] = symbol;
+    setCurrent(next);
   };
 
-  const removeLast = () => setCurrent((c) => c.slice(0, -1));
+  const clearSlot = (j: number) =>
+    setCurrent((c) => {
+      const next = [...c];
+      next[j] = undefined;
+      return next;
+    });
+
+  const filled = config ? Array.from({ length: config.codeLength }, (_, j) => current[j]) : [];
+  const complete = filled.length > 0 && filled.every((v) => v !== undefined);
 
   if (error) {
     return (
@@ -134,12 +153,13 @@ export default function Skocko({ onExit, preset }: { onExit?: () => void; preset
       <div className="board">
         {totalRows.map((i) => {
           const row = rows[i];
-          const guess = row ? row.guess : i === rows.length && !result ? current : [];
+          const active = i === rows.length && !result;
+          const guess = row ? row.guess : active ? current : [];
           return (
             <div key={i} className={`board-row ${i === rows.length && !result ? "active" : ""}`}>
               <div className="slots">
                 {Array.from({ length: config.codeLength }, (_, j) => (
-                  <Symbol key={j} value={guess[j]} />
+                  <Symbol key={j} value={guess[j]} onClear={active && !busy ? () => clearSlot(j) : undefined} />
                 ))}
               </div>
               <div className="pegs">
@@ -178,8 +198,12 @@ export default function Skocko({ onExit, preset }: { onExit?: () => void; preset
               {s.glyph}
             </button>
           ))}
-          <button className="symbol-button delete" onClick={removeLast} disabled={busy || current.length === 0} aria-label="obriši">
-            ⌫
+          <button
+            className="symbol-button confirm"
+            onClick={() => submit(filled as number[])}
+            disabled={busy || !complete}
+          >
+            Potvrdi
           </button>
         </div>
       )}

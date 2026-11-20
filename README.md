@@ -21,18 +21,24 @@ Zatim otvori http://localhost:5173 u browseru.
 
 ## Igra u dvoje
 
-- Oba igrača dobijaju isti zadatak u isto vreme.
-- **Slagalica**: duža ispravna reč nosi 2 poena po slovu (iste dužine: oba igrača dobijaju poene).
-- **Moj broj**: tačan broj 10 poena; ako niko nije pogodio, bliži dobija 5.
-- **Skočko, Ko zna zna**: svako dobija poene koje je sam osvojio.
-- **Spojnice** se igraju na smenu, u dve polovine sa različitim temama: jedan igrač spaja redom (jedan pokušaj po pojmu, 6 s),
-  a promašene parove zatim pokušava protivnik. U drugoj polovini je obrnuto. 2 poena po paru.
-- **Asocijacije** se igraju na smenu, na zajedničkoj tabli: igrač na potezu otvori polje, pa pogađa ili predaje potez.
-  Tačan odgovor: ostaje na potezu. Promašaj ili isteklo vreme (15 s): potez prelazi na protivnika.
-  Prvi igra onaj ko ima manje poena. Cela igra traje najviše 4 minuta.
-- Ako igrač osveži stranicu, vraća se u istu partiju.
+Redosled: Slagalica, Moj broj, Skočko, Ko zna zna, Spojnice, Asocijacije, Asocijacije.
 
-Na lokalnom računaru link radi samo na tom računaru. Za igru sa nekim preko interneta igricu treba postaviti na hosting.
+- **Slagalica**: duža ispravna reč nosi 2 poena po slovu (iste dužine: oba igrača dobijaju poene).
+  Kad igrač 2 sekunde ne menja reč, piše da li reč postoji u rečniku.
+- **Moj broj**: tačan broj 10 poena; ako niko nije pogodio, bliži dobija 5.
+- **Skočko**: svako dobija poene koje je sam osvojio.
+- **Ko zna zna**: oba igrača istovremeno vide isto pitanje. Brži tačan odgovor +10, netačan −5.
+  Sledeće pitanje dolazi kad oba odgovore ili istekne vreme, a tačan odgovor se pre toga oboji žuto.
+- **Spojnice**: dve polovine sa različitim temama. Za svaki pojam prvo pokušava igrač koji je na redu (6 s);
+  ako promaši, isti pojam pokušava protivnik; zatim sledeći pojam, opet prvo igrač na redu.
+  U drugoj polovini je na redu drugi igrač. 2 poena po paru.
+- **Asocijacije** (dve igre) se igraju na smenu, na zajedničkoj tabli: igrač na potezu otvori polje, pa klikne na
+  polje rešenja i kuca odgovor, ili preda potez. Tačan odgovor: ostaje na potezu. Promašaj ili isteklo vreme (15 s):
+  potez prelazi na protivnika. Prvu Asocijaciju počinje igrač koji zaostaje, drugu onaj drugi.
+- Igrač na potezu je istaknut u gornjoj traci. Ako igrač osveži stranicu, vraća se u istu partiju.
+
+Na lokalnom računaru drugi igrač se može probati u incognito prozoru. Za igru sa nekim preko interneta igricu treba
+postaviti na hosting.
 
 ## Struktura
 

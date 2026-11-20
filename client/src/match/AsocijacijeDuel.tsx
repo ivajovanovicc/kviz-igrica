@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { getSocket } from "../shared/socket";
+import AnswerBox from "../shared/AnswerBox";
 import { asocStore } from "./asocStore";
 
 // Asocijacije u dvoje, na smenu. Sve odluke donosi server, ovde je samo prikaz i slanje poteza.
@@ -23,8 +24,7 @@ const LETTERS = ["A", "B", "C", "D"];
 
 export default function AsocijacijeDuel({ names }: { names: string[] }) {
   const [state, setState] = useState<DuelState | null>(null);
-  const [target, setTarget] = useState<Target>("final");
-  const [answer, setAnswer] = useState("");
+  const [editing, setEditing] = useState<Target | null>(null); // polje rešenja u koje se trenutno kuca
   const [turnLeft, setTurnLeft] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const turnEndsAt = useRef(0);
@@ -62,16 +62,15 @@ export default function AsocijacijeDuel({ names }: { names: string[] }) {
   const canGuess = myTurn && state.phase === "guess";
   const ownerClass = (by: number | null) => (by === null ? "" : by === state.you ? "solved" : "solved-opp");
 
-  const guess = () => {
+  const guess = (target: Target, answer: string) => {
     if (!answer.trim()) return;
     send("asoc:guess", { target, answer });
-    setAnswer("");
-    setTarget("final");
+    setEditing(null);
   };
 
   let status: string;
   if (state.finished) status = state.lastAction ?? "Kraj igre.";
-  else if (myTurn) status = state.phase === "open" ? "Tvoj potez: otvori jedno polje." : "Tvoj potez: pogađaj ili predaj potez.";
+  else if (myTurn) status = state.phase === "open" ? "Tvoj potez: otvori jedno polje." : "Tvoj potez: klikni na rešenje i kucaj, ili predaj potez.";
   else status = `Na potezu je ${names[state.turn]}.`;
 
   return (
@@ -105,24 +104,30 @@ export default function AsocijacijeDuel({ names }: { names: string[] }) {
                     {f ?? `${LETTERS[c]}${i + 1}`}
                   </button>
                 ))}
-                <button
-                  className={`asoc-solution ${ownerClass(col.solvedBy)} ${canGuess && target === c ? "selected" : ""}`}
+                <AnswerBox
+                  className={`asoc-solution ${ownerClass(col.solvedBy)}`}
+                  label={col.solution ?? `Kolona ${LETTERS[c]}`}
                   disabled={col.solvedBy !== null || !canGuess}
-                  onClick={() => setTarget(c)}
-                >
-                  {col.solution ?? `Kolona ${LETTERS[c]}`}
-                </button>
+                  editing={editing === c}
+                  placeholder={`Rešenje kolone ${LETTERS[c]}…`}
+                  onStart={() => setEditing(c)}
+                  onCancel={() => setEditing(null)}
+                  onSubmit={(t) => guess(c, t)}
+                />
               </div>
             );
           })}
         </div>
-        <button
-          className={`asoc-final ${ownerClass(state.finalSolvedBy)} ${canGuess && target === "final" ? "selected" : ""}`}
+        <AnswerBox
+          className={`asoc-final ${ownerClass(state.finalSolvedBy)}`}
+          label={state.final ?? "Konačno rešenje"}
           disabled={!canGuess}
-          onClick={() => setTarget("final")}
-        >
-          {state.final ?? "Konačno rešenje"}
-        </button>
+          editing={editing === "final"}
+          placeholder={"Konačno rešenje…"}
+          onStart={() => setEditing("final")}
+          onCancel={() => setEditing(null)}
+          onSubmit={(t) => guess("final", t)}
+        />
         <div className="asoc-grid">
           {[2, 3].map((c) => {
             const col = state.columns[c];
@@ -138,13 +143,16 @@ export default function AsocijacijeDuel({ names }: { names: string[] }) {
                     {f ?? `${LETTERS[c]}${i + 1}`}
                   </button>
                 ))}
-                <button
-                  className={`asoc-solution ${ownerClass(col.solvedBy)} ${canGuess && target === c ? "selected" : ""}`}
+                <AnswerBox
+                  className={`asoc-solution ${ownerClass(col.solvedBy)}`}
+                  label={col.solution ?? `Kolona ${LETTERS[c]}`}
                   disabled={col.solvedBy !== null || !canGuess}
-                  onClick={() => setTarget(c)}
-                >
-                  {col.solution ?? `Kolona ${LETTERS[c]}`}
-                </button>
+                  editing={editing === c}
+                  placeholder={`Rešenje kolone ${LETTERS[c]}…`}
+                  onStart={() => setEditing(c)}
+                  onCancel={() => setEditing(null)}
+                  onSubmit={(t) => guess(c, t)}
+                />
               </div>
             );
           })}
@@ -153,21 +161,6 @@ export default function AsocijacijeDuel({ names }: { names: string[] }) {
 
       {canGuess && (
         <>
-          <form
-            className="asoc-input"
-            onSubmit={(e) => {
-              e.preventDefault();
-              guess();
-            }}
-          >
-            <input
-              value={answer}
-              onChange={(e) => setAnswer(e.target.value)}
-              placeholder={target === "final" ? "Konačno rešenje…" : `Rešenje kolone ${LETTERS[target]}…`}
-              autoFocus
-            />
-            <button className="action" disabled={!answer.trim()}>Pogodi</button>
-          </form>
           <button className="op-button skip" onClick={() => send("asoc:pass", {})}>
             Dalje (predaj potez)
           </button>
@@ -175,12 +168,6 @@ export default function AsocijacijeDuel({ names }: { names: string[] }) {
       )}
 
       {error && <p className="error center">{error}</p>}
-      <div className="kzz-meta">
-        <span>Ti: {state.points[state.you]}</span>
-        <span>
-          {names[1 - state.you]}: {state.points[1 - state.you]}
-        </span>
-      </div>
       {state.finished && <p className="waiting-note">Rezultat uskoro…</p>}
     </main>
   );

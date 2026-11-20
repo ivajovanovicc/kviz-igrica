@@ -3,9 +3,9 @@ import { getSocket, playerToken, setActiveMatch } from "../shared/socket";
 import Slagalica from "../games/slagalica/Slagalica";
 import MojBroj from "../games/moj-broj/MojBroj";
 import Skocko from "../games/skocko/Skocko";
-import KoZnaZna from "../games/ko-zna-zna/KoZnaZna";
 import AsocijacijeDuel from "./AsocijacijeDuel";
-import { asocStore, spojniceStore } from "./asocStore";
+import { asocStore, kzzStore, spojniceStore } from "./asocStore";
+import KoZnaZnaDuel from "./KoZnaZnaDuel";
 import SpojniceDuel from "./SpojniceDuel";
 
 type GameId = "slagalica" | "moj-broj" | "spojnice" | "skocko" | "ko-zna-zna" | "asocijacije";
@@ -18,6 +18,10 @@ const NAMES: Record<GameId, string> = {
   "ko-zna-zna": "Ko zna zna",
   asocijacije: "Asocijacije",
 };
+
+// Nazivi igara po redu u partiji (isti redosled kao na serveru)
+const ROUND_LABELS = ["Slagalica", "Moj broj", "Skočko", "Ko zna zna", "Spojnice", "Asocijacije 1", "Asocijacije 2"];
+const roundLabel = (i: number, game: GameId) => ROUND_LABELS[i] ?? NAMES[game];
 
 interface MatchState {
   code: string;
@@ -40,6 +44,8 @@ interface GameStart {
   game: GameId;
   config: any;
 }
+
+const signed = (n: number) => (n > 0 ? `+${n}` : n < 0 ? `−${-n}` : "0");
 
 const upper = (s: string) => s.toLocaleUpperCase("sr-Latn");
 
@@ -94,6 +100,9 @@ export default function Match({ mode, code, name, onExit }: { mode: "create" | "
       asocStore.last = a;
       setTurnPlayer(a.finished ? null : a.turn);
     };
+    const onKzzState = (a: unknown) => {
+      kzzStore.last = a;
+    };
     const onSpojniceState = (a: any) => {
       spojniceStore.last = a;
       setTurnPlayer(a.finished || a.phase === "reveal" ? null : a.actor);
@@ -103,6 +112,7 @@ export default function Match({ mode, code, name, onExit }: { mode: "create" | "
     socket.on("game:start", onGameStart);
     socket.on("asoc:state", onAsocState);
     socket.on("spojnice:state", onSpojniceState);
+    socket.on("kzz:state", onKzzState);
     socket.on("connect", enter); // i posle prekida veze se automatski vraća u partiju
     if (socket.connected) enter();
 
@@ -111,6 +121,7 @@ export default function Match({ mode, code, name, onExit }: { mode: "create" | "
       socket.off("game:start", onGameStart);
       socket.off("asoc:state", onAsocState);
       socket.off("spojnice:state", onSpojniceState);
+      socket.off("kzz:state", onKzzState);
       socket.off("connect", enter);
     };
   }, [mode, code, name]);
@@ -209,7 +220,7 @@ export default function Match({ mode, code, name, onExit }: { mode: "create" | "
           <tbody>
             {state.history.map((h, i) => (
               <tr key={i}>
-                <td>{NAMES[h.game]}</td>
+                <td>{roundLabel(i, h.game)}</td>
                 <td>{h.points[state.you]}</td>
                 <td>{h.points[1 - state.you]}</td>
               </tr>
@@ -228,16 +239,16 @@ export default function Match({ mode, code, name, onExit }: { mode: "create" | "
     return (
       <main className="screen">
         {scoreboard}
-        <h2 className="title small">{NAMES[r.game]}</h2>
+        <h2 className="title small">{roundLabel(state.roundIndex, r.game)}</h2>
         <div className="round-result">
           <div>
             <span className="score-name">Ti</span>
-            <span className="round-points">+{myPts}</span>
+            <span className="round-points">{signed(myPts)}</span>
             <small>{detailText(r.game, r.details?.[state.you] ?? null)}</small>
           </div>
           <div>
             <span className="score-name">{opp?.name}</span>
-            <span className="round-points">+{oppPts}</span>
+            <span className="round-points">{signed(oppPts)}</span>
             <small>{detailText(r.game, r.details?.[1 - state.you] ?? null)}</small>
           </div>
         </div>
@@ -268,7 +279,7 @@ export default function Match({ mode, code, name, onExit }: { mode: "create" | "
       ) : game.game === "skocko" ? (
         <Skocko key={game.roundIndex} preset={game.config} />
       ) : game.game === "ko-zna-zna" ? (
-        <KoZnaZna key={game.roundIndex} preset={game.config} />
+        <KoZnaZnaDuel key={game.roundIndex} names={state.players.map((p) => p.name)} />
       ) : (
         <AsocijacijeDuel key={game.roundIndex} names={state.players.map((p) => p.name)} />
       )}

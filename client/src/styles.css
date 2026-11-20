@@ -217,3 +217,26 @@ button:disabled { cursor: default; opacity: 0.5; }
 .word-check { text-align: center; font-weight: 600; margin: -6px 0 12px; }
 .word-check.ok { color: #6ee7a0; }
 .word-check.bad { color: #ff8a8a; }
+
+/* Ko zna zna u dvoje */
+.option { position: relative; }
+.option.highlight { background: var(--accent); color: var(--bg2); opacity: 1; box-shadow: 0 0 0 3px #fff3; }
+.option.chosen { outline: 3px solid var(--accent); opacity: 1; }
+.opp-mark {
+  position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+  font-size: 0.75rem; padding: 2px 8px; border-radius: 999px; background: var(--bg2); color: #fff;
+}
+
+/* Skočko: polje se briše klikom, dugme za potvrdu */
+.slot.clearable { border: none; cursor: pointer; font: inherit; font-size: 1.8rem; }
+.symbol-button.confirm { grid-column: span 2; background: var(--accent); color: var(--bg2); font-size: 1.1rem; font-weight: 700; }
+
+/* Asocijacije: kucanje direktno u polju rešenja */
+form.asoc-solution.editing, form.asoc-final.editing {
+  display: flex; gap: 4px; padding: 4px; outline: 2px solid var(--accent); background: #fff;
+}
+form.editing input {
+  flex: 1; min-width: 0; border: none; outline: none; background: transparent;
+  font: inherit; font-size: 1rem; color: var(--bg2); padding: 4px 6px; text-align: center;
+}
+.answer-ok { border: none; border-radius: 7px; background: var(--accent); color: var(--bg2); font-weight: 800; padding: 0 10px; }

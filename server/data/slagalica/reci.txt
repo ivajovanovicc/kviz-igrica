@@ -6886,7 +6886,6 @@ baždarenje
 baždarenju
 baždarina
 baždariti
-bc
 bde
 bdeći
 bdejahu
@@ -9038,9 +9037,6 @@ beživotnog
 beživotnoj
 beživotnom
 beživotnu
-bf
-bfc
-bh
 bhagavad
 bi
 bianki
@@ -10906,10 +10902,6 @@ bljuvotini
 bljuvotinu
 bljuzgavica
 bljuzgavoj
-bm
-bmg
-bmv
-bnd
 bo
 boa
 bob
@@ -12586,8 +12578,6 @@ božurima
 božurin
 božurov
 božuru
-bp
-bpc
 bpi
 br
 bra
@@ -14174,19 +14164,10 @@ bržim
 bržoj
 bržom
 bržu
-bs
 bsa
-bscg
 bse
-bsj
-bsk
-bsp
 bsprocesor
-bt
 bta
-btf
-btk
-bts
 bu
 buba
 bubac
@@ -15592,9 +15573,7 @@ case
 cati
 cavtat
 cazinske
-cb
 cbot
-cd
 cdi
 cdu
 ce
@@ -16209,11 +16188,7 @@ cezura
 cezure
 cezurom
 cezuru
-cfc
-cg
 cge
-cgt
-ch
 change
 charles
 chat
@@ -16800,7 +16775,6 @@ civilu
 civrić
 cizeler
 cizeliraju
-cjb
 cjelina
 cjeline
 cjelini
@@ -16829,13 +16803,9 @@ cjepanice
 cjevaste
 cjevasto
 cjevčicama
-cks
-cl
 clan
-clds
 clinton
 club
-cm
 cmače
 cmačete
 cmaču
@@ -16859,8 +16829,6 @@ cmok
 cmokne
 cmoknem
 cmoknuti
-cms
-cnp
 co
 coca
 code
@@ -16888,9 +16856,7 @@ conić
 cotav
 covek
 coveka
-cp
 cpa
-cpc
 cravat
 crče
 crći
@@ -17376,7 +17342,6 @@ crvotočni
 crvotočnih
 crvu
 crvuljak
-cs
 cska
 csu
 ctrl
@@ -17664,7 +17629,6 @@ cvrkutave
 cvrkutavi
 cvrkutom
 cvrkutu
-cz
 ča
 čabar
 čabarski
@@ -19922,7 +19886,6 @@ cz
 čpajak
 čsto
 čteca
-čtk
 čto
 ču
 čuang
@@ -20900,7 +20863,6 @@ cz
 ćivotom
 ćivotu
 ćkolu
-ćl
 ćlan
 ćlana
 ćo
@@ -22110,7 +22072,6 @@ daždi
 daždiću
 daždom
 daždu
-dc
 de
 deak
 deaka
@@ -24314,10 +24275,6 @@ dežurnu
 dežurstva
 dežurstvo
 dežurstvu
-df
-dh
-dhl
-dhss
 di
 dia
 dialogus
@@ -25773,7 +25730,6 @@ dižite
 dižonu
 dižu
 dižući
-dl
 dlaci
 dlačica
 dlačicama
@@ -25806,15 +25762,10 @@ dleto
 dletom
 dli
 dlijeta
-dlk
-dm
-dmb
-dmd
 dmitrij
 dmitrijev
 dmitrov
 dmitrovoga
-dmp
 dna
 dne
 dnes
@@ -25848,7 +25799,6 @@ dnevnoga
 dnevnoj
 dnevnom
 dnevnu
-dnk
 dno
 dnom
 dnr
@@ -29632,9 +29582,7 @@ doživotnog
 doživotnom
 doživotnu
 dpa
-dpm
 dpmne
-dpsm
 dra
 drač
 drača
@@ -30828,14 +30776,6 @@ držimo
 držiš
 držite
 držitelj
-ds
-dsbj
-dsk
-dsl
-dsp
-dss
-dt
-dtd
 du
 dua
 dual
@@ -31766,7 +31706,6 @@ dužnu
 dužoj
 dužom
 dužu
-dv
 dva
 dvadeset
 dvadeseta
@@ -36266,9 +36205,7 @@ fazonu
 fazu
 fbih
 fda
-fdm
 fdma
-fdp
 fe
 febre
 febrilan
@@ -36605,8 +36542,6 @@ feudalnom
 feudalnu
 feudi
 fevzija
-fg
-fhp
 fi
 fia
 fiak
@@ -37219,7 +37154,6 @@ fjorda
 fjordu
 fjučers
 fjučersa
-fl
 flagelanti
 flagrantna
 flagrantni
@@ -37387,7 +37321,6 @@ fluorescentan
 fluorid
 fluorit
 fluorom
-fmp
 fmu
 fo
 foa
@@ -37852,8 +37785,6 @@ fototipija
 fototipska
 fototipsko
 fovizma
-fpd
-fpn
 fpu
 fr
 fra
@@ -38228,11 +38159,7 @@ fruške
 fruškog
 fruškoj
 frušku
-fs
-fsb
-fscg
 fsovo
-fsv
 ftačnik
 ftačnika
 ftse
@@ -39854,9 +39781,6 @@ gev
 geza
 geze
 gezeman
-gf
-gg
-gh
 gi
 giba
 gibahu
@@ -40072,8 +39996,6 @@ gizdavoj
 gizdavost
 gizdavosti
 gizdavu
-gk
-gl
 gla
 glabanje
 glabati
@@ -41012,7 +40934,6 @@ gljivična
 gljivične
 gljivičnih
 gljivu
-gm
 gmaz
 gmaza
 gmazova
@@ -42534,8 +42455,6 @@ gozbom
 gozbovanje
 gozbovati
 gozbu
-gp
-gps
 gr
 gra
 grab
@@ -44359,10 +44278,8 @@ gruže
 gruži
 gružu
 gržetić
-gs
 gse
 gsprs
-gš
 gu
 guandong
 guanmin
@@ -45789,11 +45706,7 @@ hazna
 haznadara
 haznu
 hazur
-hb
 hbsag
-hbv
-hd
-hdl
 he
 head
 hearst
@@ -46138,8 +46051,6 @@ heteronomna
 hevi
 hezbolaha
 hezeltajn
-hg
-hgh
 hi
 hiber
 hibera
@@ -46592,7 +46503,6 @@ hjum
 hjuman
 hjumen
 hjundai
-hk
 hlače
 hlačica
 hlačicama
@@ -46743,13 +46653,8 @@ hljebove
 hljebovi
 hljebovima
 hljebu
-hm
 hmelj
 hmelja
-hn
-hnb
-hnk
-hns
 ho
 hobhauz
 hobi
@@ -47161,8 +47066,6 @@ hotimičnom
 houm
 houp
 house
-hp
-hpd
 hr
 hrabar
 hrabra
@@ -47572,10 +47475,6 @@ hrvatstvo
 hrvatstvom
 hrvatstvu
 hrve
-hs
-hsj
-hsls
-hsp
 hte
 hteće
 htede
@@ -47618,10 +47517,6 @@ htjenjem
 htjenju
 htješe
 htjeti
-htm
-html
-htp
-htv
 hu
 hua
 huanita
@@ -47883,7 +47778,6 @@ huškaše
 huškati
 huta
 hutu
-hv
 hvala
 hvalama
 hvale
@@ -48002,9 +47896,6 @@ hvati
 hvatila
 hvatiše
 hvatove
-hvb
-hvg
-hvm
 hvo
 hvostanski
 ia
@@ -60760,10 +60651,6 @@ jazu
 jaža
 jaže
 jažince
-jb
-jck
-jd
-jdz
 je
 jean
 jeb
@@ -61938,10 +61825,7 @@ jining
 jiren
 jirgen
 jirgena
-jn
 jna
-jnd
-jns
 jo
 joan
 joanidis
@@ -62172,12 +62056,8 @@ jože
 joži
 jožice
 jožu
-jpg
 jr
-js
-jsd
 jso
-jt
 ju
 juan
 juana
@@ -62703,8 +62583,6 @@ južnjačko
 južnjačkog
 južnjačkom
 južnjak
-jv
-jžtp
 ka
 kaba
 kabadahija
@@ -65775,12 +65653,8 @@ kažnjivog
 kažnjivost
 kažnjivosti
 kažu
-kbc
-kbps
-kc
 kcija
 kcna
-kcs
 kćer
 kćerca
 kćerci
@@ -65800,8 +65674,6 @@ kćerko
 kćerkom
 kćerku
 kći
-kd
-kds
 ke
 keba
 kebot
@@ -66162,13 +66034,10 @@ keziti
 kežman
 kežmana
 kežmanom
-kf
 kforovci
 kforovcima
 kforove
-kg
 kgr
-kh
 kiarostami
 kibic
 kibicer
@@ -66810,7 +66679,6 @@ kivno
 kivnog
 kivnom
 kizić
-kj
 kjersgard
 kjodo
 kjota
@@ -67751,7 +67619,6 @@ kliznuše
 kliznuti
 kliženje
 kližete
-klm
 kloaka
 klobuci
 klobuča
@@ -68035,7 +67902,6 @@ kljuse
 kljusetu
 kljuvao
 kljuvati
-km
 kmečati
 kmeče
 kmečeći
@@ -68071,7 +67937,6 @@ kmetuje
 kmetujte
 kmetuju
 kmezavo
-kn
 kne
 knedlama
 knedle
@@ -73119,12 +72984,8 @@ kožurice
 kožuricu
 kožuru
 kožusima
-kp
 kpa
-kpgt
-kpmg
 kprf
-kpz
 kr
 kra
 krabulja
@@ -75698,18 +75559,14 @@ kržljavo
 kržljavog
 kržljavom
 kržljavošću
-ks
 ksanti
 ksantija
 ksantiju
-ksd
 ksenon
 kseroks
 ksi
 ksilofon
-ksj
 ksu
-kt
 ktetik
 ktetika
 ktitor
@@ -77206,7 +77063,6 @@ kužno
 kužnog
 kužnu
 kužnjak
-kv
 kvaci
 kvačica
 kvačicu
@@ -77436,7 +77292,6 @@ kvizove
 kvizovi
 kvizovima
 kvizu
-kvm
 kvo
 kvoca
 kvocaj
@@ -77475,9 +77330,6 @@ kvrgavo
 kvrgavog
 kvrge
 kvržica
-kzb
-kzj
-kzk
 la
 lab
 laba
@@ -78638,11 +78490,6 @@ lažovsku
 lažovu
 lažu
 lažući
-lb
-lc
-ld
-ldl
-ldp
 ldpr
 le
 leander
@@ -79855,10 +79702,6 @@ ležištu
 ležite
 ležu
 ležući
-lf
-lfv
-lh
-lhb
 li
 lianderu
 lib
@@ -81066,7 +80909,6 @@ ližisahan
 ližisahani
 ližu
 ližući
-lk
 lme
 lo
 lob
@@ -81873,14 +81715,8 @@ ložnici
 ložnicu
 ložom
 ložu
-lp
 lputjan
 lr
-ls
-lscg
-lsdv
-lsv
-ltd
 lu
 lua
 lub
@@ -86116,12 +85952,7 @@ mažući
 mažuran
 mbaja
 mbeki
-mbps
-mc
 mci
-mcp
-md
-mdk
 me
 meakić
 meakića
@@ -87824,13 +87655,7 @@ mezio
 mezo
 mezon
 mežica
-mf
-mfb
-mg
-mgk
-mh
 mhat
-mhz
 mi
 mia
 mic
@@ -89662,7 +89487,6 @@ mizerno
 mizernog
 mizernoj
 mizernost
-mj
 mjanmara
 mjaukao
 mjede
@@ -89751,11 +89575,7 @@ mjuzikl
 mjuzikla
 mjuzikli
 mjuziklu
-mk
-mkck
 mkrtčjan
-mks
-ml
 mlaca
 mlačiti
 mlaćen
@@ -90160,9 +89980,7 @@ mljeskanje
 mljeskati
 mljeti
 mljiv
-mn
 mnama
-mnb
 mnemotehnički
 mnemotehnika
 mnenja
@@ -91909,10 +91727,8 @@ možek
 možemo
 možeš
 možete
-mpc
 mpi
 mpri
-mps
 mr
 mračan
 mračević
@@ -92455,12 +92271,8 @@ mržnjenje
 mržnji
 mržnjom
 mržnju
-msp
 msu
-mš
-mt
 mti
-mtv
 mu
 muamer
 mubarak
@@ -93410,8 +93222,6 @@ mužjakom
 mužjakovu
 mužom
 mužu
-mv
-mz
 na
 nabaca
 nabacaju
@@ -101973,8 +101783,6 @@ nažvrljano
 nažvrljao
 nažvrljati
 nba
-nbc
-nd
 ndi
 ndr
 ne
@@ -108855,7 +108663,6 @@ nežnosti
 nežnostima
 nežnošću
 nežnu
-ng
 ngo
 ni
 nicala
@@ -109399,10 +109206,6 @@ nižoj
 nižom
 nižu
 nižući
-nkpj
-nkvd
-nm
-nmd
 no
 noa
 noar
@@ -110210,15 +110013,9 @@ nožnom
 nožu
 nožurda
 nožurdama
-np
-npd
-npk
 npr
 npro
-ns
 nsa
-nsp
-nšk
 nu
 nude
 nudeći
@@ -110418,7 +110215,6 @@ nužnostima
 nužnošću
 nužnu
 nvo
-nzd
 nzija
 njačem
 njaka
@@ -131680,10 +131476,7 @@ pčinjskog
 pčinjskoj
 pčinjskom
 pčinju
-pd
 pda
-pdp
-pds
 pdsr
 pe
 peace
@@ -133383,13 +133176,8 @@ pevušiti
 pezaru
 pezeta
 pezosa
-pf
 pfenig
 pfeniga
-pg
-pgp
-pgt
-ph
 pi
 piano
 pica
@@ -134446,7 +134234,6 @@ pižama
 pižamama
 pižame
 pižami
-pj
 pjacetu
 pjaci
 pjacola
@@ -134460,10 +134247,6 @@ pjanovićem
 pjanoviću
 pjastera
 pjerluiđi
-pjp
-pk
-pkj
-pks
 pla
 plac
 placa
@@ -136085,9 +135868,6 @@ pljuvaonica
 pljuvaonicu
 pljuvaše
 pljuvati
-pmb
-pmf
-pn
 pneuma
 pneumatici
 pneumatika
@@ -136097,7 +135877,6 @@ pneumatske
 pneumatski
 pneumonija
 pneumoniju
-pnhz
 pnue
 po
 poara
@@ -168015,7 +167794,6 @@ pržiš
 pržite
 pržiti
 pržun
-ps
 psa
 psalam
 psalama
@@ -168032,7 +167810,6 @@ psaltira
 psaltire
 psaltirom
 psaltiru
-psd
 pse
 pseća
 pseće
@@ -168134,7 +167911,6 @@ psina
 psine
 psino
 psinu
-psj
 psoglava
 psoglavi
 psom
@@ -168162,7 +167938,6 @@ psovke
 psovki
 psovkom
 psovku
-pst
 psu
 psuj
 psuje
@@ -168172,8 +167947,6 @@ psuješ
 psujete
 psuju
 psujući
-psv
-psž
 pšenica
 pšenice
 pšenici
@@ -168188,7 +167961,6 @@ pšenično
 pšeničnog
 pšeničnom
 pšeničnu
-pt
 pti
 ptica
 pticama
@@ -169302,8 +169074,6 @@ pužiće
 pužići
 pužu
 pvo
-pz
-pzm
 rab
 raba
 rabadžija
@@ -184297,15 +184067,11 @@ sažvaće
 sažvakane
 sažvakanih
 sažvakati
-sb
 sbarbaro
-sbd
 sbih
-sbs
 sbu
 sbun
 sbutega
-sc
 scale
 sce
 scena
@@ -184347,19 +184113,12 @@ scenskoj
 scenskom
 scensku
 scenu
-sch
 sci
 scile
-sd
 sda
-sdb
-sdf
 sdoj
-sdp
 sdpr
 sdr
-sds
-sdsm
 sdu
 sdus
 se
@@ -185972,7 +185731,6 @@ seže
 sežem
 sežu
 sežući
-sfd
 sfeci
 sfera
 sferama
@@ -185992,9 +185750,7 @@ sforom
 sforu
 sfr
 sfumata
-sg
 sge
-sh
 sharčiti
 shema
 shemama
@@ -187574,7 +187330,6 @@ sižejnom
 sižejnu
 sižeom
 sižeu
-sj
 sja
 sjaha
 sjahala
@@ -187875,7 +187630,6 @@ skautski
 skavolini
 skazaljka
 skazaljke
-skd
 skeč
 skeča
 skečeva
@@ -187958,7 +187712,6 @@ skerlićev
 skerlićeva
 skerlićeve
 skerlićevi
-skf
 ski
 skica
 skicama
@@ -188941,7 +188694,6 @@ skrušenošću
 skrušenu
 skruši
 skrušiti
-sks
 skucamo
 skucan
 skucati
@@ -189175,8 +188927,6 @@ skvrči
 skvrčila
 skvrčio
 skvrnavi
-skz
-sl
 sla
 slab
 slaba
@@ -189746,7 +189496,6 @@ slaži
 slažite
 slažu
 slažući
-sld
 sleće
 slećemo
 slećeš
@@ -190842,7 +190591,6 @@ sljubivši
 sljubljujemo
 sljubljuju
 sljuštila
-sm
 sma
 smače
 smaći
@@ -191986,7 +191734,6 @@ smrznutom
 smrznutu
 smrzoše
 smrzotina
-sms
 smuca
 smucaju
 smucajući
@@ -192104,7 +191851,6 @@ smutnje
 smutnji
 smutnjom
 smutnju
-sn
 sna
 snabde
 snabdeće
@@ -192345,7 +192091,6 @@ snežnoga
 snežnoj
 snežnom
 snežnu
-sng
 sni
 snih
 snije
@@ -192551,8 +192296,6 @@ snoviđenja
 snoviđenje
 snoviđenju
 snovima
-sns
-snsd
 snu
 snuje
 snujemo
@@ -192572,7 +192315,6 @@ snuždilo
 snuždio
 snuždiše
 snužditi
-snv
 snježane
 snježna
 snježne
@@ -193250,7 +192992,6 @@ sovrlić
 sovu
 sovuljaga
 sovuljage
-sp
 spa
 space
 spacioniranje
@@ -193670,7 +193411,6 @@ spazivši
 spazma
 spazme
 spazmi
-spd
 spe
 spec
 speci
@@ -193904,7 +193644,6 @@ spisu
 spiš
 spite
 spitfajer
-spj
 splačina
 splačinama
 splačine
@@ -193999,7 +193738,6 @@ spljoštenog
 spljoštio
 spljoštite
 spljoštiti
-spm
 spo
 spočetka
 spočitati
@@ -194892,7 +194630,6 @@ spržim
 spržio
 spržite
 spržiti
-sps
 spuči
 spust
 spusta
@@ -195943,7 +195680,6 @@ srzića
 srž
 srži
 sržju
-st
 sta
 stabala
 stabalca
@@ -197754,8 +197490,6 @@ stjuardesa
 stjuardese
 stjuardesi
 stjuardom
-stk
-stm
 sto
 stoca
 stoci
@@ -199176,8 +198910,6 @@ strvoder
 strvodera
 strvoderski
 strže
-sts
-stsj
 stub
 stuba
 stubac
@@ -199410,7 +199142,6 @@ stužiti
 stuživalo
 stuživati
 stužuje
-stv
 stvar
 stvara
 stvaraće
@@ -199558,7 +199289,6 @@ stvrdnutim
 stvrdnutu
 stvrdnjava
 stvrdnjavaju
-stvt
 su
 sua
 suad
@@ -201524,7 +201254,6 @@ sužnjevi
 sužnji
 sužnjima
 sužnju
-sv
 sva
 svabim
 svača
@@ -202882,7 +202611,6 @@ svladati
 svladava
 svladavala
 svlak
-svm
 svo
 svoboda
 svod
@@ -203257,10 +202985,8 @@ svukoše
 svuku
 svukud
 svukuda
-sz
 szo
 szup
-sžs
 ša
 šabačka
 šabačke
@@ -204989,7 +204715,6 @@ sžs
 šizofrenu
 šižgorić
 šjor
-šk
 škakljaju
 škakljali
 škakljamo
@@ -208397,10 +208122,6 @@ tazbinom
 tazbinstvu
 tazbinu
 taze
-tb
-tbc
-tc
-td
 tdr
 te
 tearce
@@ -209984,13 +209705,8 @@ težnju
 težoj
 težom
 težu
-tf
-tfc
-tfd
 tfe
-tg
 tgi
-th
 thi
 ti
 tibald
@@ -210570,7 +210286,6 @@ tivatskog
 tivatskoj
 tivatskom
 tivjakov
-tj
 tja
 tjedan
 tjednik
@@ -210619,7 +210334,6 @@ tješilo
 tješio
 tješite
 tješiti
-tk
 tka
 tkač
 tkači
@@ -210712,7 +210426,6 @@ tlocrtima
 tlocrtom
 tlocrtu
 tlom
-tls
 tlu
 tma
 tmaste
@@ -210741,7 +210454,6 @@ tmurnom
 tmuše
 tmuši
 tmušić
-tnt
 to
 toalet
 toaleta
@@ -211505,7 +211217,6 @@ toze
 tozi
 tozija
 tozu
-tp
 tr
 tra
 trabanata
@@ -214071,7 +213782,6 @@ tržnim
 tržno
 tržnog
 tržnom
-ts
 tu
 tua
 tuba
@@ -214849,7 +214559,6 @@ tvarnoj
 tvarnom
 tvarnost
 tvarnu
-tvb
 tvente
 tvid
 tvida
@@ -215064,7 +214773,6 @@ tvrtko
 tvrtkom
 tvrtković
 tvrtku
-tzv
 ua
 uazbučiti
 ub
@@ -229633,7 +229341,6 @@ važnosti
 važnošću
 važnu
 važući
-vc
 veb
 veba
 veber
@@ -231289,8 +230996,6 @@ vežiće
 vežite
 vežu
 vežući
-vf
-vh
 vi
 via
 vib
@@ -232714,9 +232419,6 @@ vjeruju
 vjetrove
 vjetrovi
 vjetrovima
-vk
-vkv
-vl
 vlačene
 vlači
 vlačić
@@ -233057,9 +232759,7 @@ vlažnosti
 vlažnošću
 vlažnu
 vlkanov
-vm
 vma
-vns
 vo
 voajera
 voajeri
@@ -233940,8 +233640,6 @@ vožnje
 vožnji
 vožnjom
 vožnju
-vp
-vpm
 vprost
 vr
 vrabac
@@ -235049,14 +234747,8 @@ vrzmati
 vrzu
 vrže
 vržina
-vs
-vsj
-vsk
 vso
-vš
-vt
 vta
-vtv
 vu
 vucara
 vucaraju
@@ -235414,7 +235106,6 @@ vušović
 vušurević
 vušurović
 vušurovića
-vz
 za
 zabace
 zabaci
@@ -244914,7 +244605,6 @@ zderati
 zdere
 zderu
 zdesna
-zdf
 zdi
 zdimi
 zdimio
@@ -246088,7 +245778,6 @@ zivlak
 zivlaka
 zivot
 zivota
-zj
 zjala
 zjape
 zjapeće
@@ -246111,8 +245800,6 @@ zjenici
 zjenicu
 zjuganov
 zjuganova
-zkp
-zl
 zla
 zlaćana
 zlaćane
@@ -246583,7 +246270,6 @@ zluradost
 zluradosti
 zluradošću
 zluraduje
-zm
 zmaj
 zmaja
 zmaje
@@ -246936,7 +246622,6 @@ znojno
 znojnog
 znojnu
 znoju
-znp
 zob
 zoba
 zobaju
@@ -247201,8 +246886,6 @@ zrnu
 zrnje
 zrnjevići
 zru
-zsb
-zsj
 zu
 zub
 zuba
@@ -247386,7 +247069,6 @@ zurovac
 zurovca
 zuvić
 zuzana
-zv
 zva
 zvaće
 zvaćemo

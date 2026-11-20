@@ -16,7 +16,7 @@ interface Pitanje {
   netacno: string[];
 }
 
-type Puzzle = { question: string; options: string[]; correct: number }[];
+export type Puzzle = { question: string; options: string[]; correct: number }[];
 
 interface KzzSession extends BaseSession {
   correctOption: number[];

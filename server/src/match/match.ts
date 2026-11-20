@@ -9,6 +9,7 @@ import { asocijacijeModule } from "../games/asocijacije/routes.js";
 import { GAME_ORDER, GameId, scoreRound } from "./rules.js";
 import { AsocDuel } from "./asocDuel.js";
 import { SpojniceDuel } from "./spojniceDuel.js";
+import { KzzDuel } from "./kzzDuel.js";
 import { generate as generateSpojnice } from "../games/spojnice/routes.js";
 
 // Partija u dvoje: dva igrača igraju istih šest igara, istim redom, sa istim zadacima.
@@ -41,8 +42,11 @@ interface Round {
   results: (GameResult | null)[];
   points: [number, number] | null;
   watchdog?: NodeJS.Timeout;
-  duel?: AsocDuel; // Asocijacije se u dvoje igraju na smenu
-  spojDuel?: SpojniceDuel; // Spojnice takođe
+  // Igre koje server vodi uživo za oba igrača (na smenu ili sinhronizovano)
+  live?: { event: string; view: (player: number) => object; stop: () => void };
+  duel?: AsocDuel; // Asocijacije: na smenu
+  spojDuel?: SpojniceDuel; // Spojnice: na smenu
+  kzzDuel?: KzzDuel; // Ko zna zna: sinhronizovano
 }
 
 type Phase = "waiting" | "starting" | "playing" | "round-result" | "finished";
@@ -53,6 +57,7 @@ interface Match {
   phase: Phase;
   rounds: Round[];
   createdAt: number;
+  firstAsocStarter?: number;
 }
 
 const matches = new Map<string, Match>();
@@ -106,47 +111,49 @@ export function setupMatches(io: Server) {
     io.to(p.socketId).emit("game:start", {
       roundIndex: match.rounds.length - 1,
       game: round.game,
-      config: round.duel || round.spojDuel ? { duel: true } : round.configs[playerIndex],
+      config: round.live ? { duel: true } : round.configs[playerIndex],
     });
-    if (round.duel) io.to(p.socketId).emit("asoc:state", { ...round.duel.view(), you: playerIndex });
-    if (round.spojDuel) io.to(p.socketId).emit("spojnice:state", { ...round.spojDuel.view(), you: playerIndex });
+    if (round.live) io.to(p.socketId).emit(round.live.event, { ...round.live.view(playerIndex), you: playerIndex });
   }
 
-  function emitSpojnice(match: Match, round: Round) {
+  function emitLive(match: Match, round: Round) {
     match.players.forEach((p, i) => {
-      if (p.socketId && round.spojDuel) io.to(p.socketId).emit("spojnice:state", { ...round.spojDuel.view(), you: i });
+      if (p.socketId && round.live) io.to(p.socketId).emit(round.live.event, { ...round.live.view(i), you: i });
     });
   }
 
-  function startSpojniceDuel(match: Match, round: Round) {
-    const first = match.players[1].total < match.players[0].total ? 1 : 0;
-    const p1 = generateSpojnice();
-    const p2 = generateSpojnice(p1.set.tema);
-    round.spojDuel = new SpojniceDuel(
-      [p1, p2],
-      first,
-      match.players.map((p) => p.name),
-      () => emitSpojnice(match, round),
-      (points) => points.forEach((pts, i) => onResult(match, round, i, { points: pts }))
-    );
-  }
+  const finishBoth = (match: Match, round: Round) => (points: [number, number]) =>
+    points.forEach((pts, i) => onResult(match, round, i, { points: pts }));
 
-  function emitDuel(match: Match, round: Round) {
-    match.players.forEach((p, i) => {
-      if (p.socketId && round.duel) io.to(p.socketId).emit("asoc:state", { ...round.duel.view(), you: i });
-    });
-  }
+  // Ko je na zaostatku, počinje (kod nerešenog: igrač koji je napravio partiju)
+  const behind = (match: Match) => (match.players[1].total < match.players[0].total ? 1 : 0);
 
-  function startDuel(match: Match, round: Round) {
-    // Prvi igra onaj ko ima manje poena (kod nerešenog: igrač koji je napravio partiju)
-    const first = match.players[1].total < match.players[0].total ? 1 : 0;
-    round.duel = new AsocDuel(
-      asocijacijeModule.generate(),
-      first,
-      match.players.map((p) => p.name),
-      () => emitDuel(match, round),
-      (points) => points.forEach((pts, i) => onResult(match, round, i, { points: pts }))
-    );
+  function startLiveGame(match: Match, round: Round) {
+    const names = match.players.map((p) => p.name);
+    const onChange = () => emitLive(match, round);
+    if (round.game === "asocijacije") {
+      // prvu Asocijaciju počinje igrač koji zaostaje, drugu onaj drugi
+      let first: number;
+      if (match.firstAsocStarter === undefined) {
+        first = behind(match);
+        match.firstAsocStarter = first;
+      } else {
+        first = 1 - match.firstAsocStarter;
+      }
+      const duel = new AsocDuel(asocijacijeModule.generate(), first, names, onChange, finishBoth(match, round));
+      round.duel = duel;
+      round.live = { event: "asoc:state", view: () => duel.view(), stop: () => duel.stop() };
+    } else if (round.game === "spojnice") {
+      const p1 = generateSpojnice();
+      const p2 = generateSpojnice(p1.set.tema);
+      const duel = new SpojniceDuel([p1, p2], behind(match), names, onChange, finishBoth(match, round));
+      round.spojDuel = duel;
+      round.live = { event: "spojnice:state", view: () => duel.view(), stop: () => duel.stop() };
+    } else {
+      const duel = new KzzDuel(koZnaZnaModule.generate(), onChange, finishBoth(match, round));
+      round.kzzDuel = duel;
+      round.live = { event: "kzz:state", view: (p) => duel.view(p), stop: () => duel.stop() };
+    }
   }
 
   function startRound(match: Match) {
@@ -155,10 +162,9 @@ export function setupMatches(io: Server) {
     const round: Round = { game, gameIds: [], configs: [], results: [null, null], points: null };
     match.rounds.push(round);
 
-    if (game === "asocijacije" || game === "spojnice") {
+    if (game === "asocijacije" || game === "spojnice" || game === "ko-zna-zna") {
       match.phase = "playing";
-      if (game === "asocijacije") startDuel(match, round);
-      else startSpojniceDuel(match, round);
+      startLiveGame(match, round);
       broadcast(match);
       match.players.forEach((_, i) => sendGameStart(match, i));
       return;
@@ -265,6 +271,12 @@ export function setupMatches(io: Server) {
       duelAction((d, p) => d.guess(p, target, answer))(cb)
     );
     socket.on("asoc:pass", (_ = {}, cb) => duelAction((d, p) => d.pass(p))(cb));
+    socket.on("kzz:answer", ({ question, option } = {}, cb) => {
+      const match = matches.get(socket.data.matchCode);
+      const round = match?.rounds[match.rounds.length - 1];
+      const error = round?.kzzDuel ? round.kzzDuel.answer(socket.data.playerIndex, question, option) : "Igra nije u toku.";
+      if (typeof cb === "function") cb({ error });
+    });
     socket.on("spojnice:pick", ({ right } = {}, cb) => {
       const match = matches.get(socket.data.matchCode);
       const round = match?.rounds[match.rounds.length - 1];

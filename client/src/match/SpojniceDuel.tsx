@@ -10,11 +10,13 @@ interface State {
   left: string[];
   right: string[];
   solvedBy: (number | null)[];
+  missed: boolean[];
   rightOwner: (number | null)[];
   answers: number[] | null;
   current: number | null;
   actor: number;
-  phase: "main" | "steal" | "reveal";
+  isSecondChance: boolean;
+  phase: "play" | "reveal";
   moveSecondsLeft: number;
   points: [number, number];
   lastAction: string | null;
@@ -61,9 +63,10 @@ export default function SpojniceDuel({ names }: { names: string[] }) {
   };
 
   let status: string;
-  if (state.phase === "reveal") status = state.half === 0 ? "Kraj prve polovine. Tačni parovi su ispod." : "Kraj Spojnica.";
-  else if (myTurn) status = state.phase === "steal" ? "Tvoj potez: pokušaj promašeni par!" : "Tvoj potez: spoji označeni pojam.";
-  else status = `Na potezu je ${names[state.actor]}${state.phase === "steal" ? " (pokušava promašene)" : ""}.`;
+  if (state.phase === "reveal" || state.finished)
+    status = state.half === 0 ? "Kraj prve polovine. Tačni parovi su ispod." : "Kraj Spojnica.";
+  else if (myTurn) status = state.isSecondChance ? "Tvoja šansa: protivnik je promašio!" : "Tvoj potez: spoji označeni pojam.";
+  else status = `Na potezu je ${names[state.actor]}${state.isSecondChance ? " (šansa posle promašaja)" : ""}.`;
 
   return (
     <main className="screen spojnice-duel">
@@ -84,7 +87,8 @@ export default function SpojniceDuel({ names }: { names: string[] }) {
       <div className="pairs-rows">
         {state.left.map((l, i) => {
           const by = state.solvedBy[i];
-          const cls = by !== null ? owner(by) : state.answers ? "wrong" : i === state.current ? "active" : "";
+          const cls =
+            by !== null ? owner(by) : state.missed[i] || state.answers ? "wrong" : i === state.current ? "active" : "";
           return (
             <div key={i} className="pair-row">
               <div className={`pair-item ${cls}`}>

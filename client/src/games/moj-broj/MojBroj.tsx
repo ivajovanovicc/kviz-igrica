@@ -101,7 +101,7 @@ export default function MojBroj({ onExit, preset }: { onExit?: () => void; prese
     if (!config || busy) return;
     setBusy(true);
     try {
-      const expression = tryEvaluate(text) !== null ? text : "";
+      const expression = text; // server proverava ispravnost izraza
       setResult(await post<Result>(`/api/moj-broj/${config.gameId}/submit`, { expression }));
     } catch (e) {
       setError((e as Error).message);
@@ -112,18 +112,8 @@ export default function MojBroj({ onExit, preset }: { onExit?: () => void; prese
 
   const timeLeft = useCountdown(config?.timeLimitSeconds ?? 60, !!config && !result, submit, config?.gameId);
 
-  // Pravila unosa: posle broja ide operacija ili ")", posle operacije ide broj ili "("
-  const last = tokens[tokens.length - 1];
-  const afterValue = last && (last.kind === "num" || last.value === ")");
-  const openParens = tokens.filter((t) => t.kind === "op" && t.value === "(").length -
-    tokens.filter((t) => t.kind === "op" && t.value === ")").length;
   const usedIndexes = new Set(tokens.filter((t) => t.kind === "num").map((t) => (t as { index: number }).index));
 
-  const canUseOp = (op: string) => {
-    if (op === "(") return !afterValue;
-    if (op === ")") return !!afterValue && openParens > 0;
-    return !!afterValue;
-  };
 
   if (error) {
     return (
@@ -147,7 +137,7 @@ export default function MojBroj({ onExit, preset }: { onExit?: () => void; prese
           <button
             key={i}
             className={`number-button ${i >= 4 ? "big" : ""}`}
-            disabled={!!result || afterValue || usedIndexes.has(i)}
+            disabled={!!result || usedIndexes.has(i)}
             onClick={() => setTokens([...tokens, { kind: "num", index: i }])}
           >
             {n}
@@ -183,11 +173,11 @@ export default function MojBroj({ onExit, preset }: { onExit?: () => void; prese
         <>
           <div className="ops">
             {OPS.map((op) => (
-              <button key={op} className="op-button" disabled={!canUseOp(op)} onClick={() => setTokens([...tokens, { kind: "op", value: op }])}>
+              <button key={op} className="op-button" onClick={() => setTokens([...tokens, { kind: "op", value: op }])}>
                 {OP_LABEL[op] ?? op}
               </button>
             ))}
-            <button className="op-button" disabled={!tokens.length} onClick={() => setTokens(tokens.slice(0, -1))} aria-label="obriši">
+            <button className="op-button" onClick={() => setTokens(tokens.slice(0, -1))} aria-label="obriši">
               ⌫
             </button>
           </div>
