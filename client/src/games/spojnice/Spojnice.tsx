@@ -18,10 +18,10 @@ interface Summary {
   timeUp?: boolean;
 }
 
-export default function Spojnice({ onExit }: { onExit: () => void }) {
-  const [config, setConfig] = useState<Config | null>(null);
+export default function Spojnice({ onExit, preset }: { onExit?: () => void; preset?: Config }) {
+  const [config, setConfig] = useState<Config | null>(preset ?? null);
   const [current, setCurrent] = useState(0);
-  const [results, setResults] = useState<(boolean | null)[]>([]);
+  const [results, setResults] = useState<(boolean | null)[]>(preset ? preset.left.map(() => null) : []);
   const [matchedRight, setMatchedRight] = useState<Record<number, number>>({}); // desni -> levi
   const [summary, setSummary] = useState<Summary | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -42,8 +42,8 @@ export default function Spojnice({ onExit }: { onExit: () => void }) {
   }, []);
 
   useEffect(() => {
-    start();
-  }, [start]);
+    if (!preset) start();
+  }, [start, preset]);
 
   const onTimeUp = useCallback(async () => {
     if (!config) return;
@@ -80,7 +80,7 @@ export default function Spojnice({ onExit }: { onExit: () => void }) {
       <main className="screen">
         <p className="error">{error}</p>
         <button className="action" onClick={start}>Pokušaj ponovo</button>
-        <button className="link" onClick={onExit}>← Nazad</button>
+        {onExit && <button className="link" onClick={onExit}>← Nazad</button>}
       </main>
     );
   }
@@ -127,7 +127,7 @@ export default function Spojnice({ onExit }: { onExit: () => void }) {
           <p className="result-text">
             {summary.timeUp ? "Vreme je isteklo. " : ""}Osvojeno {summary.points} poena.
           </p>
-          <button className="action" onClick={start}>Nova partija</button>
+          {preset ? <p className="waiting-note">Čeka se protivnik…</p> : <button className="action" onClick={start}>Nova partija</button>}
         </div>
       )}
     </main>

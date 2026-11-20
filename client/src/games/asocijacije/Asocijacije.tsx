@@ -14,10 +14,10 @@ interface BoardView {
 type Target = number | "final";
 const LETTERS = ["A", "B", "C", "D"];
 
-export default function Asocijacije({ onExit }: { onExit: () => void }) {
-  const [gameId, setGameId] = useState<string | null>(null);
-  const [timeLimit, setTimeLimit] = useState(120);
-  const [board, setBoard] = useState<BoardView | null>(null);
+export default function Asocijacije({ onExit, preset }: { onExit?: () => void; preset?: BoardView & { gameId: string; timeLimitSeconds: number } }) {
+  const [gameId, setGameId] = useState<string | null>(preset?.gameId ?? null);
+  const [timeLimit, setTimeLimit] = useState(preset?.timeLimitSeconds ?? 120);
+  const [board, setBoard] = useState<BoardView | null>(preset ?? null);
   const [target, setTarget] = useState<Target>("final");
   const [answer, setAnswer] = useState("");
   const [message, setMessage] = useState<string | null>(null);
@@ -40,8 +40,8 @@ export default function Asocijacije({ onExit }: { onExit: () => void }) {
   }, []);
 
   useEffect(() => {
-    start();
-  }, [start]);
+    if (!preset) start();
+  }, [start, preset]);
 
   const giveUp = useCallback(async () => {
     if (!gameId) return;
@@ -88,7 +88,7 @@ export default function Asocijacije({ onExit }: { onExit: () => void }) {
       <main className="screen">
         <p className="error">{error}</p>
         <button className="action" onClick={start}>Pokušaj ponovo</button>
-        <button className="link" onClick={onExit}>← Nazad</button>
+        {onExit && <button className="link" onClick={onExit}>← Nazad</button>}
       </main>
     );
   }
@@ -135,7 +135,7 @@ export default function Asocijacije({ onExit }: { onExit: () => void }) {
           <p className="result-text">
             {board.timeUp ? "Vreme je isteklo. " : ""}Osvojeno {board.score} poena.
           </p>
-          <button className="action" onClick={start}>Nova partija</button>
+          {preset ? <p className="waiting-note">Čeka se protivnik…</p> : <button className="action" onClick={start}>Nova partija</button>}
         </div>
       ) : (
         <>

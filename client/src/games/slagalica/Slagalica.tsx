@@ -19,8 +19,8 @@ interface Result {
 
 const upper = (s: string) => s.toLocaleUpperCase("sr-Latn");
 
-export default function Slagalica({ onExit }: { onExit: () => void }) {
-  const [config, setConfig] = useState<Config | null>(null);
+export default function Slagalica({ onExit, preset }: { onExit?: () => void; preset?: Config }) {
+  const [config, setConfig] = useState<Config | null>(preset ?? null);
   const [picked, setPicked] = useState<number[]>([]);
   const [result, setResult] = useState<Result | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -38,8 +38,8 @@ export default function Slagalica({ onExit }: { onExit: () => void }) {
   }, []);
 
   useEffect(() => {
-    start();
-  }, [start]);
+    if (!preset) start();
+  }, [start, preset]);
 
   const submit = useCallback(async () => {
     if (!config || busy) return;
@@ -60,7 +60,7 @@ export default function Slagalica({ onExit }: { onExit: () => void }) {
       <main className="screen">
         <p className="error">{error}</p>
         <button className="action" onClick={start}>Pokušaj ponovo</button>
-        <button className="link" onClick={onExit}>← Nazad</button>
+        {onExit && <button className="link" onClick={onExit}>← Nazad</button>}
       </main>
     );
   }
@@ -106,7 +106,7 @@ export default function Slagalica({ onExit }: { onExit: () => void }) {
               Najduža moguća reč: <strong>{upper(result.longest)}</strong>
             </p>
           )}
-          <button className="action" onClick={start}>Nova partija</button>
+          {preset ? <p className="waiting-note">Čeka se protivnik…</p> : <button className="action" onClick={start}>Nova partija</button>}
         </div>
       ) : (
         <>

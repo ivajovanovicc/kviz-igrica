@@ -2,7 +2,11 @@
 
 Online kviz igrica u browseru, sa šest igara: Slagalica, Moj broj, Spojnice, Skočko, Ko zna zna i Asocijacije.
 
-Trenutno rade svih šest igara za jednog igrača. Igra u dvoje (preko linka i sa nasumičnim protivnikom) i igra protiv bota dolaze kasnije.
+Trenutno radi:
+- **Vežbanje**: svaka igra posebno, za jednog igrača
+- **Igra u dvoje preko linka**: jedan igrač napravi partiju i pošalje link, drugi uđe i igraju svih šest igara redom
+
+Kasnije: nasumičan protivnik, samostalna partija sa poređenjem sa računarom, redizajn.
 
 ## Pokretanje na svom računaru
 
@@ -15,9 +19,19 @@ npm run dev
 
 Zatim otvori http://localhost:5173 u browseru.
 
+## Igra u dvoje
+
+- Oba igrača dobijaju isti zadatak u isto vreme.
+- **Slagalica**: duža ispravna reč nosi 2 poena po slovu (iste dužine: oba igrača dobijaju poene).
+- **Moj broj**: tačan broj 10 poena; ako niko nije pogodio, bliži dobija 5.
+- **Spojnice, Skočko, Ko zna zna, Asocijacije**: svako dobija poene koje je sam osvojio.
+- Ako igrač osveži stranicu, vraća se u istu partiju.
+
+Na lokalnom računaru link radi samo na tom računaru. Za igru sa nekim preko interneta igricu treba postaviti na hosting.
+
 ## Struktura
 
-- `server/`: Node.js + Express backend. Svaka igra ima svoj modul u `server/src/games/<igra>/`.
+- `server/`: Node.js + Express backend. Svaka igra ima svoj modul u `server/src/games/<igra>/`, a igra u dvoje (Socket.io) je u `server/src/match/`.
 - `client/`: React frontend (Vite). Svaka igra ima svoj ekran u `client/src/games/<igra>/`.
 
 Server čuva tačna rešenja i proverava odgovore, da igrač ne bi mogao da vara iz browsera.

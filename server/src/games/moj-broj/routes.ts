@@ -1,7 +1,8 @@
 import { Router } from "express";
-import { BaseSession, SessionStore } from "../../shared/sessions.js";
+import { BaseSession, GameModule, GameResult, SessionStore } from "../../shared/sessions.js";
 import {
   ExpressionError,
+  Puzzle,
   TIME_LIMIT_SECONDS,
   evaluateExpression,
   pointsFor,
@@ -16,12 +17,26 @@ interface MojBrojSession extends BaseSession {
 }
 
 const store = new SessionStore<MojBrojSession>(TIME_LIMIT_SECONDS);
+
+function createSession(puzzle: Puzzle, onFinish?: (r: GameResult) => void) {
+  const gameId = store.create({ ...puzzle, startedAt: Date.now(), finished: false, onFinish });
+  return { gameId, ...puzzle, timeLimitSeconds: TIME_LIMIT_SECONDS };
+}
+
+export const mojBrojModule: GameModule<Puzzle> = {
+  generate: () => randomPuzzle(),
+  createSession,
+  forceFinish(id) {
+    const game = store.get(id);
+    if (game) store.complete(game, { points: 0, detail: { value: null, distance: null } });
+  },
+  maxDurationSeconds: TIME_LIMIT_SECONDS,
+};
+
 export const mojBrojRouter = Router();
 
 mojBrojRouter.post("/new", (_req, res) => {
-  const puzzle = randomPuzzle();
-  const gameId = store.create({ ...puzzle, startedAt: Date.now(), finished: false });
-  res.json({ gameId, ...puzzle, timeLimitSeconds: TIME_LIMIT_SECONDS });
+  res.json(createSession(randomPuzzle()));
 });
 
 // Igrač šalje izraz (ili prazan string ako nije ništa složio)
@@ -50,14 +65,11 @@ mojBrojRouter.post("/:id/submit", (req, res) => {
     }
   }
 
-  game.finished = true;
-  const best = solve(game.numbers, game.target);
-  res.json({
-    value,
-    invalidReason,
-    timeUp,
-    points: pointsFor(value, game.target),
-    target: game.target,
-    best,
+  const points = pointsFor(value, game.target);
+  store.complete(game, {
+    points,
+    detail: { value, distance: value === null ? null : Math.abs(value - game.target) },
   });
+  const best = solve(game.numbers, game.target);
+  res.json({ value, invalidReason, timeUp, points, target: game.target, best });
 });

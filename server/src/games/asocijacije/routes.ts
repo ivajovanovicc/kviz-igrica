@@ -1,5 +1,5 @@
-import { Router } from "express";
-import { BaseSession, SessionStore } from "../../shared/sessions.js";
+import { Response, Router } from "express";
+import { BaseSession, GameModule, GameResult, SessionStore } from "../../shared/sessions.js";
 import { pickRandom, readData } from "../../shared/data.js";
 import { answerMatches } from "../../shared/text.js";
 import { Asocijacija, TIME_LIMIT_SECONDS, columnPoints, finalPoints } from "./logic.js";
@@ -30,7 +30,7 @@ function view(game: AsocSession) {
   };
 }
 
-function load(req: { params: { id: string } }, res: any): AsocSession | null {
+function load(req: { params: { id: string } }, res: Response): AsocSession | null {
   const game = store.get(req.params.id);
   if (!game) {
     res.status(404).json({ error: "Igra ne postoji." });
@@ -41,15 +41,14 @@ function load(req: { params: { id: string } }, res: any): AsocSession | null {
     return null;
   }
   if (store.timeIsUp(game)) {
-    game.finished = true;
+    store.complete(game, { points: game.score });
     res.json({ ...view(game), timeUp: true });
     return null;
   }
   return game;
 }
 
-asocijacijeRouter.post("/new", (_req, res) => {
-  const board = pickRandom(boards);
+function createSession(board: Asocijacija, onFinish?: (r: GameResult) => void) {
   const game: AsocSession = {
     board,
     opened: board.kolone.map((k) => k.polja.map(() => false)),
@@ -57,9 +56,24 @@ asocijacijeRouter.post("/new", (_req, res) => {
     score: 0,
     startedAt: Date.now(),
     finished: false,
+    onFinish,
   };
   const gameId = store.create(game);
-  res.json({ gameId, timeLimitSeconds: TIME_LIMIT_SECONDS, ...view(game) });
+  return { gameId, timeLimitSeconds: TIME_LIMIT_SECONDS, ...view(game) };
+}
+
+export const asocijacijeModule: GameModule<Asocijacija> = {
+  generate: () => pickRandom(boards),
+  createSession,
+  forceFinish(id) {
+    const game = store.get(id);
+    if (game) store.complete(game, { points: game.score });
+  },
+  maxDurationSeconds: TIME_LIMIT_SECONDS,
+};
+
+asocijacijeRouter.post("/new", (_req, res) => {
+  res.json(createSession(pickRandom(boards)));
 });
 
 asocijacijeRouter.post("/:id/open", (req, res) => {
@@ -85,7 +99,7 @@ asocijacijeRouter.post("/:id/guess", (req, res) => {
     correct = answerMatches(answer, game.board.konacno, game.board.prihvata);
     if (correct) {
       game.score += finalPoints(game.opened, game.solved);
-      game.finished = true;
+      store.complete(game, { points: game.score });
     }
   } else if (Number.isInteger(target) && game.board.kolone[target] && !game.solved[target]) {
     const kolona = game.board.kolone[target];
@@ -103,6 +117,6 @@ asocijacijeRouter.post("/:id/guess", (req, res) => {
 asocijacijeRouter.post("/:id/give-up", (req, res) => {
   const game = store.get(req.params.id);
   if (!game) return res.status(404).json({ error: "Igra ne postoji." });
-  game.finished = true;
+  store.complete(game, { points: game.score });
   res.json(view(game));
 });

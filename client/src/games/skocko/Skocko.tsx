@@ -43,8 +43,8 @@ function Symbol({ value }: { value: number | undefined }) {
   );
 }
 
-export default function Skocko({ onExit }: { onExit: () => void }) {
-  const [config, setConfig] = useState<Config | null>(null);
+export default function Skocko({ onExit, preset }: { onExit?: () => void; preset?: Config }) {
+  const [config, setConfig] = useState<Config | null>(preset ?? null);
   const [rows, setRows] = useState<Row[]>([]);
   const [current, setCurrent] = useState<number[]>([]);
   const [result, setResult] = useState<Result | null>(null);
@@ -65,8 +65,8 @@ export default function Skocko({ onExit }: { onExit: () => void }) {
   }, []);
 
   useEffect(() => {
-    start();
-  }, [start]);
+    if (!preset) start();
+  }, [start, preset]);
 
   const onTimeUp = useCallback(async () => {
     if (!config) return;
@@ -119,7 +119,7 @@ export default function Skocko({ onExit }: { onExit: () => void }) {
       <main className="screen">
         <p className="error">{error}</p>
         <button className="action" onClick={start}>Pokušaj ponovo</button>
-        <button className="link" onClick={onExit}>← Nazad</button>
+        {onExit && <button className="link" onClick={onExit}>← Nazad</button>}
       </main>
     );
   }
@@ -169,7 +169,7 @@ export default function Skocko({ onExit }: { onExit: () => void }) {
           <p className="result-text">
             {result.solved ? `Bravo! Osvojeno ${result.points} poena.` : result.timeUp ? "Vreme je isteklo." : "Nije pogođeno."}
           </p>
-          <button className="action" onClick={start}>Nova partija</button>
+          {preset ? <p className="waiting-note">Čeka se protivnik…</p> : <button className="action" onClick={start}>Nova partija</button>}
         </div>
       ) : (
         <div className="picker">

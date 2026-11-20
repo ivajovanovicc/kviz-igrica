@@ -72,8 +72,8 @@ function tryEvaluate(text: string): number | null {
   }
 }
 
-export default function MojBroj({ onExit }: { onExit: () => void }) {
-  const [config, setConfig] = useState<Config | null>(null);
+export default function MojBroj({ onExit, preset }: { onExit?: () => void; preset?: Config }) {
+  const [config, setConfig] = useState<Config | null>(preset ?? null);
   const [tokens, setTokens] = useState<Token[]>([]);
   const [result, setResult] = useState<Result | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -91,8 +91,8 @@ export default function MojBroj({ onExit }: { onExit: () => void }) {
   }, []);
 
   useEffect(() => {
-    start();
-  }, [start]);
+    if (!preset) start();
+  }, [start, preset]);
 
   const text = config ? toText(tokens, config.numbers) : "";
   const currentValue = text ? tryEvaluate(text) : null;
@@ -130,7 +130,7 @@ export default function MojBroj({ onExit }: { onExit: () => void }) {
       <main className="screen">
         <p className="error">{error}</p>
         <button className="action" onClick={start}>Pokušaj ponovo</button>
-        <button className="link" onClick={onExit}>← Nazad</button>
+        {onExit && <button className="link" onClick={onExit}>← Nazad</button>}
       </main>
     );
   }
@@ -177,7 +177,7 @@ export default function MojBroj({ onExit }: { onExit: () => void }) {
             {result.best.value === result.target ? "Moguće rešenje" : `Najbliže moguće (${result.best.value})`}:{" "}
             <strong>{result.best.expr.replace(/\*/g, "×").replace(/\//g, "÷")}</strong>
           </p>
-          <button className="action" onClick={start}>Nova partija</button>
+          {preset ? <p className="waiting-note">Čeka se protivnik…</p> : <button className="action" onClick={start}>Nova partija</button>}
         </div>
       ) : (
         <>

@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { BaseSession, SessionStore } from "../../shared/sessions.js";
+import { BaseSession, GameModule, GameResult, SessionStore } from "../../shared/sessions.js";
 import { LETTER_COUNT, POINTS_PER_LETTER, TIME_LIMIT_SECONDS, isWord, loadDictionary, longestWord, randomLetters } from "./logic.js";
 
 interface SlagalicaSession extends BaseSession {
@@ -9,12 +9,26 @@ interface SlagalicaSession extends BaseSession {
 loadDictionary(); // učitaj rečnik odmah pri pokretanju servera
 
 const store = new SessionStore<SlagalicaSession>(TIME_LIMIT_SECONDS);
+
+function createSession(letters: string[], onFinish?: (r: GameResult) => void) {
+  const gameId = store.create({ letters, startedAt: Date.now(), finished: false, onFinish });
+  return { gameId, letters, timeLimitSeconds: TIME_LIMIT_SECONDS };
+}
+
+export const slagalicaModule: GameModule<string[]> = {
+  generate: () => randomLetters(),
+  createSession,
+  forceFinish(id) {
+    const game = store.get(id);
+    if (game) store.complete(game, { points: 0, detail: { word: "", length: 0 } });
+  },
+  maxDurationSeconds: TIME_LIMIT_SECONDS,
+};
+
 export const slagalicaRouter = Router();
 
 slagalicaRouter.post("/new", (_req, res) => {
-  const letters = randomLetters();
-  const gameId = store.create({ letters, startedAt: Date.now(), finished: false });
-  res.json({ gameId, letters, timeLimitSeconds: TIME_LIMIT_SECONDS });
+  res.json(createSession(randomLetters()));
 });
 
 // Igrač šalje redne brojeve pločica koje je izabrao, npr. [3, 0, 7]
@@ -35,13 +49,8 @@ slagalicaRouter.post("/:id/submit", (req, res) => {
   const word = (tiles as number[]).map((t) => game.letters[t]).join("");
   const accepted = !timeUp && word.length > 0 && isWord(word);
   const letterCount = (tiles as number[]).length;
+  const points = accepted ? letterCount * POINTS_PER_LETTER : 0;
 
-  game.finished = true;
-  res.json({
-    word,
-    accepted,
-    timeUp,
-    points: accepted ? letterCount * POINTS_PER_LETTER : 0,
-    longest: longestWord(game.letters),
-  });
+  store.complete(game, { points, detail: { word: accepted ? word : "", length: accepted ? letterCount : 0 } });
+  res.json({ word, accepted, timeUp, points, longest: longestWord(game.letters) });
 });

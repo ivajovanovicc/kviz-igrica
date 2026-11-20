@@ -7,12 +7,12 @@ export default function GameHeader({
   title: string;
   timeLeft: number;
   timeLimit: number;
-  onExit: () => void;
+  onExit?: () => void;
 }) {
   return (
     <>
       <header className="game-header">
-        <button className="link" onClick={onExit}>← Nazad</button>
+        {onExit ? <button className="link" onClick={onExit}>← Nazad</button> : <span className="header-spacer" />}
         <h2>{title}</h2>
         <span className={`timer ${timeLeft <= 10 ? "low" : ""}`}>{timeLeft}s</span>
       </header>

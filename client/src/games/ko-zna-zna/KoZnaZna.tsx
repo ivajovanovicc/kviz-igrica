@@ -15,8 +15,8 @@ interface Feedback {
   delta: number;
 }
 
-export default function KoZnaZna({ onExit }: { onExit: () => void }) {
-  const [config, setConfig] = useState<Config | null>(null);
+export default function KoZnaZna({ onExit, preset }: { onExit?: () => void; preset?: Config }) {
+  const [config, setConfig] = useState<Config | null>(preset ?? null);
   const [index, setIndex] = useState(0);
   const [score, setScore] = useState(0);
   const [feedback, setFeedback] = useState<Feedback | null>(null);
@@ -39,8 +39,8 @@ export default function KoZnaZna({ onExit }: { onExit: () => void }) {
   }, []);
 
   useEffect(() => {
-    start();
-  }, [start]);
+    if (!preset) start();
+  }, [start, preset]);
 
   const answer = useCallback(
     async (option: number | null) => {
@@ -84,7 +84,7 @@ export default function KoZnaZna({ onExit }: { onExit: () => void }) {
       <main className="screen">
         <p className="error">{error}</p>
         <button className="action" onClick={start}>Pokušaj ponovo</button>
-        <button className="link" onClick={onExit}>← Nazad</button>
+        {onExit && <button className="link" onClick={onExit}>← Nazad</button>}
       </main>
     );
   }
@@ -99,7 +99,7 @@ export default function KoZnaZna({ onExit }: { onExit: () => void }) {
           <p className="best">
             Tačnih: {stats.correct} · Netačnih: {stats.wrong} · Preskočenih: {stats.skipped}
           </p>
-          <button className="action" onClick={start}>Nova partija</button>
+          {preset ? <p className="waiting-note">Čeka se protivnik…</p> : <button className="action" onClick={start}>Nova partija</button>}
         </div>
       </main>
     );
