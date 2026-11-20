@@ -1,10 +1,11 @@
 import { useState } from "react";
 import Skocko from "./games/skocko/Skocko";
+import MojBroj from "./games/moj-broj/MojBroj";
 
 // Redosled igara kao u originalu
 const GAMES = [
   { id: "slagalica", name: "Slagalica", ready: false },
-  { id: "moj-broj", name: "Moj broj", ready: false },
+  { id: "moj-broj", name: "Moj broj", ready: true },
   { id: "spojnice", name: "Spojnice", ready: false },
   { id: "skocko", name: "Skočko", ready: true },
   { id: "ko-zna-zna", name: "Ko zna zna", ready: false },
@@ -16,6 +17,7 @@ type GameId = (typeof GAMES)[number]["id"];
 export default function App() {
   const [current, setCurrent] = useState<GameId | null>(null);
 
+  if (current === "moj-broj") return <MojBroj onExit={() => setCurrent(null)} />;
   if (current === "skocko") return <Skocko onExit={() => setCurrent(null)} />;
 
   return (

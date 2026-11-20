@@ -72,3 +72,26 @@ button:disabled { cursor: default; opacity: 0.5; }
   background: var(--accent); color: var(--bg2); font-weight: 700;
 }
 .error { color: #ff6b6b; }
+
+/* Moj broj */
+.target {
+  margin: 4px auto 16px; width: 160px; padding: 12px; border-radius: 16px; text-align: center;
+  background: var(--accent); color: var(--bg2); font-size: 2.6rem; font-weight: 800;
+}
+.numbers { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+.number-button {
+  height: 56px; border: none; border-radius: 12px; background: rgba(255, 255, 255, 0.9);
+  color: var(--bg2); font-size: 1.5rem; font-weight: 700;
+}
+.number-button.big { grid-column: span 2; }
+.expression {
+  margin: 16px 0; min-height: 64px; padding: 12px 14px; border-radius: 12px; background: var(--panel);
+  display: flex; align-items: center; justify-content: space-between; gap: 10px; font-size: 1.3rem; word-break: break-word;
+}
+.expression-value { color: var(--accent); font-weight: 700; white-space: nowrap; }
+.ops { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
+.op-button {
+  height: 50px; border: none; border-radius: 10px; background: var(--panel); color: #fff; font-size: 1.4rem;
+}
+.action.wide { width: 100%; margin-top: 14px; padding: 14px; font-size: 1.1rem; }
+.best { opacity: 0.9; }

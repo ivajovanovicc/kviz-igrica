@@ -1,4 +1,7 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { post } from "../../shared/api";
+import { useCountdown } from "../../shared/useCountdown";
+import GameHeader from "../../shared/GameHeader";
 
 // Sopstveni set simbola (ne kopiramo originalne)
 const SYMBOLS = [
@@ -30,17 +33,6 @@ interface Result {
   timeUp?: boolean;
 }
 
-async function post<T>(url: string, body?: unknown): Promise<T> {
-  const res = await fetch(url, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: body ? JSON.stringify(body) : undefined,
-  });
-  const data = await res.json();
-  if (!res.ok) throw new Error(data.error ?? "Greška na serveru");
-  return data;
-}
-
 function Symbol({ value }: { value: number | undefined }) {
   if (value === undefined) return <span className="slot" />;
   const s = SYMBOLS[value];
@@ -56,10 +48,8 @@ export default function Skocko({ onExit }: { onExit: () => void }) {
   const [rows, setRows] = useState<Row[]>([]);
   const [current, setCurrent] = useState<number[]>([]);
   const [result, setResult] = useState<Result | null>(null);
-  const [timeLeft, setTimeLeft] = useState(0);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const endsAt = useRef(0);
 
   const start = useCallback(async () => {
     setError(null);
@@ -69,8 +59,6 @@ export default function Skocko({ onExit }: { onExit: () => void }) {
     try {
       const cfg = await post<Config>("/api/skocko/new");
       setConfig(cfg);
-      endsAt.current = Date.now() + cfg.timeLimitSeconds * 1000;
-      setTimeLeft(cfg.timeLimitSeconds);
     } catch (e) {
       setError((e as Error).message);
     }
@@ -80,23 +68,15 @@ export default function Skocko({ onExit }: { onExit: () => void }) {
     start();
   }, [start]);
 
-  // Tajmer
-  useEffect(() => {
-    if (!config || result) return;
-    const t = setInterval(async () => {
-      const left = Math.max(0, Math.ceil((endsAt.current - Date.now()) / 1000));
-      setTimeLeft(left);
-      if (left === 0) {
-        clearInterval(t);
-        try {
-          setResult(await post<Result>(`/api/skocko/${config.gameId}/timeout`));
-        } catch (e) {
-          setError((e as Error).message);
-        }
-      }
-    }, 250);
-    return () => clearInterval(t);
-  }, [config, result]);
+  const onTimeUp = useCallback(async () => {
+    if (!config) return;
+    try {
+      setResult(await post<Result>(`/api/skocko/${config.gameId}/timeout`));
+    } catch (e) {
+      setError((e as Error).message);
+    }
+  }, [config]);
+  const timeLeft = useCountdown(config?.timeLimitSeconds ?? 60, !!config && !result, onTimeUp, config?.gameId);
 
   const submit = useCallback(
     async (guess: number[]) => {
@@ -149,14 +129,7 @@ export default function Skocko({ onExit }: { onExit: () => void }) {
 
   return (
     <main className="screen">
-      <header className="game-header">
-        <button className="link" onClick={onExit}>← Nazad</button>
-        <h2>Skočko</h2>
-        <span className={`timer ${timeLeft <= 10 ? "low" : ""}`}>{timeLeft}s</span>
-      </header>
-      <div className="timebar">
-        <div style={{ width: `${(timeLeft / config.timeLimitSeconds) * 100}%` }} />
-      </div>
+      <GameHeader title="Skočko" timeLeft={timeLeft} timeLimit={config.timeLimitSeconds} onExit={onExit} />
 
       <div className="board">
         {totalRows.map((i) => {
