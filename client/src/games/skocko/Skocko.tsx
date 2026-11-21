@@ -4,7 +4,7 @@ import { useCountdown } from "../../shared/useCountdown";
 import GameHeader from "../../shared/GameHeader";
 
 // Sopstveni set simbola (ne kopiramo originalne)
-const SYMBOLS = [
+export const SYMBOLS = [
   { glyph: "☺", color: "#ffd23f", label: "smajli" },
   { glyph: "♣", color: "#2ecc71", label: "tref" },
   { glyph: "♠", color: "#1b1f3b", label: "pik" },

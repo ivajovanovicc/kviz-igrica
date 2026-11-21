@@ -24,7 +24,9 @@ test("validacija", () => {
 });
 
 test("bodovi", () => {
-  assert.equal(pointsFor(1), 30);
-  assert.equal(pointsFor(5), 20);
+  assert.equal(pointsFor(1), 20);
+  assert.equal(pointsFor(2), 20);
+  assert.equal(pointsFor(3), 15);
+  assert.equal(pointsFor(5), 10);
   assert.equal(pointsFor(6), 10);
 });

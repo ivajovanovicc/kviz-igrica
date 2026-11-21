@@ -2,8 +2,8 @@ import { POINTS_CORRECT, POINTS_WRONG, Puzzle, SECONDS_PER_QUESTION } from "../g
 
 // Ko zna zna u dvoje, sinhronizovano:
 // - oba igrača istovremeno vide isto pitanje
-// - svako odgovara jednom; netačan odgovor -5, preskakanje 0
-// - tačan odgovor donosi +10 samo onome ko je PRVI tačno odgovorio
+// - svako odgovara jednom; netačan odgovor -3, preskakanje 0
+// - tačan odgovor donosi +6 samo onome ko je PRVI tačno odgovorio
 // - pitanje traje dok oba ne odgovore ili ne istekne vreme; onda se svima pokaže tačan odgovor
 // - posle kratke pauze oba igrača istovremeno dobijaju sledeće pitanje
 

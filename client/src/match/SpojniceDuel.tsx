@@ -71,7 +71,7 @@ export default function SpojniceDuel({ names }: { names: string[] }) {
   else status = `Na potezu je ${names[state.actor]}${state.isSecondChance ? " (šansa posle promašaja)" : ""}.`;
 
   return (
-    <main className="screen spojnice-duel">
+    <main className={`screen spojnice-duel ${playing && !myTurn ? "dimmed" : ""}`}>
       <header className="game-header">
         <span className="header-spacer" />
         <h2>Spojnice</h2>
@@ -85,18 +85,24 @@ export default function SpojniceDuel({ names }: { names: string[] }) {
       {state.lastAction && <p className="last-action">{state.lastAction}</p>}
       <p className="theme">{state.tema}</p>
 
-      {/* Svaki red: levi pojam i desni pojam jedan pored drugog */}
+      {/* Svaki red: levi pojam i desni pojam jedan pored drugog.
+          Na kraju se desna kolona poređa uz tačne parove: spojeni u boji igrača, nespojeni žuti. */}
       <div className="pairs-rows">
         {state.left.map((l, i) => {
           const by = state.solvedBy[i];
-          const cls =
-            by !== null ? owner(by) : state.missed[i] || state.answers ? "missed" : i === state.current ? "active" : "";
+          if (state.answers) {
+            const cls = by !== null ? owner(by) : "unsolved";
+            return (
+              <div key={i} className="pair-row">
+                <div className={`pair-item ${cls}`}>{l}</div>
+                <div className={`pair-item ${cls}`}>{state.right[state.answers[i]]}</div>
+              </div>
+            );
+          }
+          const cls = by !== null ? owner(by) : state.missed[i] ? "missed" : i === state.current ? "current" : "";
           return (
             <div key={i} className="pair-row">
-              <div className={`pair-item ${cls}`}>
-                {l}
-                {state.answers && by === null && <small className="pair-answer">→ {state.right[state.answers[i]]}</small>}
-              </div>
+              <div className={`pair-item ${cls}`}>{l}</div>
               <button
                 className={`pair-item pair-button ${owner(state.rightOwner[i])}`}
                 disabled={!myTurn || state.rightOwner[i] !== null}

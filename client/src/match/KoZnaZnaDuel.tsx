@@ -72,7 +72,7 @@ export default function KoZnaZnaDuel({ names }: { names: string[] }) {
   } else if (answered) {
     note = "";
   } else {
-    note = state.opponentAnswered ? `${opp} je već odgovorio/la!` : "Brži tačan odgovor nosi 10 poena.";
+    note = state.opponentAnswered ? `${opp} je već odgovorio/la!` : "Brži tačan odgovor nosi 6 poena.";
   }
 
   return (

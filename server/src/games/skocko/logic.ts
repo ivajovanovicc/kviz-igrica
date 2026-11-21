@@ -49,10 +49,13 @@ export function evaluate(secret: Code, guess: Code): Feedback {
   return { red, yellow };
 }
 
-// Bodovi kao u TV verziji: pogodak u 1-4. pokušaju 30, u 5. 20, u 6. 10
+// Bodovi: pogodak u 1. ili 2. pokušaju 20, u 3. ili 4. 15, u 5. ili 6. 10
 export function pointsFor(attemptNumber: number): number {
-  if (attemptNumber <= 4) return 30;
-  if (attemptNumber === 5) return 20;
-  if (attemptNumber === 6) return 10;
+  if (attemptNumber <= 2) return 20;
+  if (attemptNumber <= 4) return 15;
+  if (attemptNumber <= 6) return 10;
   return 0;
 }
+
+// Ako vlasnik runde ne pogodi, protivnik ima jedan pokušaj
+export const STEAL_POINTS = 5;

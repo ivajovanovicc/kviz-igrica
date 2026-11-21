@@ -2,3 +2,4 @@
 export const asocStore: { last: unknown } = { last: null };
 export const spojniceStore: { last: unknown } = { last: null };
 export const kzzStore: { last: unknown } = { last: null };
+export const skockoStore: { last: unknown } = { last: null };

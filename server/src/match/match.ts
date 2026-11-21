@@ -10,6 +10,8 @@ import { GAME_ORDER, GameId, roundOwner, scoreRound } from "./rules.js";
 import { AsocDuel } from "./asocDuel.js";
 import { SpojniceDuel } from "./spojniceDuel.js";
 import { KzzDuel } from "./kzzDuel.js";
+import { SkockoDuel } from "./skockoDuel.js";
+import { randomCode } from "../games/skocko/logic.js";
 import { generate as generateSpojnice } from "../games/spojnice/routes.js";
 import { generate as generateKzz } from "../games/ko-zna-zna/routes.js";
 import { generateAsocijacija } from "../games/asocijacije/routes.js";
@@ -50,6 +52,7 @@ interface Round {
   duel?: AsocDuel; // Asocijacije: na smenu
   spojDuel?: SpojniceDuel; // Spojnice: na smenu
   kzzDuel?: KzzDuel; // Ko zna zna: sinhronizovano
+  skockoDuel?: SkockoDuel; // Skočko: vlasnik runde pogađa, protivnik ima jedan pokušaj
 }
 
 type Phase = "waiting" | "starting" | "playing" | "round-result" | "finished";
@@ -149,6 +152,10 @@ export function setupMatches(io: Server) {
       const duel = new SpojniceDuel([puzzle], owner, names, onChange, finishBoth(match, round));
       round.spojDuel = duel;
       round.live = { event: "spojnice:state", view: () => duel.view(), stop: () => duel.stop() };
+    } else if (round.game === "skocko") {
+      const duel = new SkockoDuel(randomCode(), owner, onChange, finishBoth(match, round));
+      round.skockoDuel = duel;
+      round.live = { event: "skocko:state", view: () => duel.view(), stop: () => duel.stop() };
     } else {
       const puzzle = generateKzz(match.usedQuestions);
       match.usedQuestions.push(...puzzle.map((q) => q.question));
@@ -164,7 +171,7 @@ export function setupMatches(io: Server) {
     const round: Round = { game, gameIds: [], configs: [], results: [null, null], points: null };
     match.rounds.push(round);
 
-    if (game === "asocijacije" || game === "spojnice" || game === "ko-zna-zna") {
+    if (game === "asocijacije" || game === "spojnice" || game === "ko-zna-zna" || game === "skocko") {
       match.phase = "playing";
       startLiveGame(match, round);
       broadcast(match);
@@ -280,6 +287,12 @@ export function setupMatches(io: Server) {
       duelAction((d, p) => d.guess(p, target, answer))(cb)
     );
     socket.on("asoc:pass", (_ = {}, cb) => duelAction((d, p) => d.pass(p))(cb));
+    socket.on("skocko:guess", ({ guess } = {}, cb) => {
+      const match = matches.get(socket.data.matchCode);
+      const round = match?.rounds[match.rounds.length - 1];
+      const error = round?.skockoDuel ? round.skockoDuel.guess(socket.data.playerIndex, guess) : "Igra nije u toku.";
+      if (typeof cb === "function") cb({ error });
+    });
     socket.on("kzz:answer", ({ question, option } = {}, cb) => {
       const match = matches.get(socket.data.matchCode);
       const round = match?.rounds[match.rounds.length - 1];

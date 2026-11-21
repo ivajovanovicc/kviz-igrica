@@ -132,7 +132,7 @@ export default function KoZnaZna({ onExit, preset }: { onExit?: () => void; pres
       <button className="op-button skip" disabled={!!feedback} onClick={() => answer(null)}>
         Preskoči
       </button>
-      <p className="hint">Tačan odgovor +10, netačan −5, preskočeno 0</p>
+      <p className="hint">Tačan odgovor +6, netačan −3, preskočeno 0</p>
     </main>
   );
 }

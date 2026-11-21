@@ -8,7 +8,7 @@ const puzzle = [
 ];
 const wait = (ms = 5) => new Promise((r) => setTimeout(r, ms));
 
-test("brži tačan dobija 10, sporiji tačan 0, netačan -5", async () => {
+test("brži tačan dobija 6, sporiji tačan 0, netačan -3", async () => {
   let result: [number, number] | null = null;
   const d = new KzzDuel(puzzle, () => {}, (p) => (result = p), 10, 0);
   assert.equal(d.answer(1, 0, 1), null); // igrač 2 prvi tačno
@@ -17,13 +17,13 @@ test("brži tačan dobija 10, sporiji tačan 0, netačan -5", async () => {
   assert.equal(d.view(0).opponentAnswer, undefined); // tuđi odgovor se ne vidi pre kraja
   d.answer(0, 0, 1); // igrač 1 kasnije tačno
   assert.equal(d.view(0).phase, "reveal");
-  assert.deepEqual(d.view(0).deltas, [0, 10]);
+  assert.deepEqual(d.view(0).deltas, [0, 6]);
   await wait();
   assert.equal(d.view(0).index, 1);
   d.answer(0, 1, 0); // netačno
   d.answer(1, 1, null); // preskače
   await wait();
-  assert.deepEqual(result, [-5, 10]);
+  assert.deepEqual(result, [-3, 6]);
 });
 
 test("ne može dva puta odgovor ni na pogrešno pitanje", () => {

@@ -327,3 +327,14 @@ form.editing input {
 .moj-broj-screen .ops { grid-template-columns: repeat(6, 1fr); }
 .stamps { position: absolute; right: -6px; top: -14px; display: flex; gap: 4px; }
 .stamps .stamp { position: static; }
+
+/* Skočko u dvoje */
+.skocko-duel.dimmed .board, .spojnice-duel.dimmed .pairs-rows { filter: brightness(0.6); transition: filter 0.2s; }
+.board-sep { height: 8px; }
+.board-row.color-row-p0 { box-shadow: inset 4px 0 0 var(--p0); }
+.board-row.color-row-p1 { box-shadow: inset 4px 0 0 var(--p1); }
+
+/* Spojnice u dvoje: trenutni pojam žut, na kraju nespojeni parovi žuti */
+.pair-item.current { background: var(--accent); color: var(--bg2); font-weight: 700; }
+.pair-item.unsolved { background: var(--accent); color: var(--bg2); font-weight: 700; }
+.spojnice-duel.dimmed .pair-button:disabled { opacity: 1; }

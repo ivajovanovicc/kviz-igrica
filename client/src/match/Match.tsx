@@ -2,9 +2,9 @@ import { useEffect, useRef, useState } from "react";
 import { getSocket, playerToken, setActiveMatch } from "../shared/socket";
 import Slagalica from "../games/slagalica/Slagalica";
 import MojBroj from "../games/moj-broj/MojBroj";
-import Skocko from "../games/skocko/Skocko";
 import AsocijacijeDuel from "./AsocijacijeDuel";
-import { asocStore, kzzStore, spojniceStore } from "./asocStore";
+import { asocStore, kzzStore, skockoStore, spojniceStore } from "./asocStore";
+import SkockoDuel from "./SkockoDuel";
 import KoZnaZnaDuel from "./KoZnaZnaDuel";
 import SpojniceDuel from "./SpojniceDuel";
 
@@ -63,7 +63,6 @@ function detailText(game: GameId, d: Record<string, unknown> | null): string {
     return "bez reči";
   }
   if (game === "moj-broj") return d.value === null || d.value === undefined ? "bez rezultata" : `${d.value} (razlika ${d.distance})`;
-  if (game === "skocko") return d.attempts ? `pogođeno iz ${d.attempts}. pokušaja` : "nije pogođeno";
   return "";
 }
 
@@ -113,6 +112,10 @@ export default function Match({ mode, code, name, onExit }: { mode: "create" | "
     const onKzzState = (a: unknown) => {
       kzzStore.last = a;
     };
+    const onSkockoState = (a: any) => {
+      skockoStore.last = a;
+      setTurnPlayer(a.finished || a.phase === "reveal" ? null : a.actor);
+    };
     const onSpojniceState = (a: any) => {
       spojniceStore.last = a;
       setTurnPlayer(a.finished || a.phase === "reveal" ? null : a.actor);
@@ -123,6 +126,7 @@ export default function Match({ mode, code, name, onExit }: { mode: "create" | "
     socket.on("asoc:state", onAsocState);
     socket.on("spojnice:state", onSpojniceState);
     socket.on("kzz:state", onKzzState);
+    socket.on("skocko:state", onSkockoState);
     socket.on("connect", enter); // i posle prekida veze se automatski vraća u partiju
     if (socket.connected) enter();
 
@@ -132,6 +136,7 @@ export default function Match({ mode, code, name, onExit }: { mode: "create" | "
       socket.off("asoc:state", onAsocState);
       socket.off("spojnice:state", onSpojniceState);
       socket.off("kzz:state", onKzzState);
+      socket.off("skocko:state", onSkockoState);
       socket.off("connect", enter);
     };
   }, [mode, code, name]);
@@ -407,7 +412,7 @@ export default function Match({ mode, code, name, onExit }: { mode: "create" | "
       ) : game.game === "spojnice" ? (
         <SpojniceDuel key={game.roundIndex} names={state.players.map((p) => p.name)} />
       ) : game.game === "skocko" ? (
-        <Skocko key={game.roundIndex} preset={game.config} />
+        <SkockoDuel key={game.roundIndex} names={state.players.map((p) => p.name)} />
       ) : game.game === "ko-zna-zna" ? (
         <KoZnaZnaDuel key={game.roundIndex} names={state.players.map((p) => p.name)} />
       ) : (

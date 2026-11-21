@@ -30,9 +30,11 @@ vlasnik runde pobeđuje kad je izjednačeno, a u igrama na smenu igra prvi.
   Posle igre se vide obe reči i reč kompjutera.
 - **Moj broj**: poene dobija samo bliži rezultat: tačan broj 10, inače 5 (isto blizu: vlasnik runde).
   Posle igre se vide rezultati i izrazi oba igrača, a ako niko nije pogodio i rešenje kompjutera.
-- **Skočko**: svako dobija poene koje je sam osvojio.
-- **Ko zna zna**: oba igrača istovremeno vide isto pitanje. Brži tačan odgovor +10, netačan −5.
+- **Skočko**: kombinaciju pogađa vlasnik runde (6 pokušaja, 90 s), protivnik gleda. Pogodak u 1. ili 2. pokušaju 20,
+  u 3. ili 4. 15, u 5. ili 6. 10 poena. Ako vlasnik ne pogodi, protivnik ima jedan pokušaj (15 s) za 5 poena.
+- **Ko zna zna**: oba igrača istovremeno vide isto pitanje. Brži tačan odgovor +6, netačan −3.
 - **Spojnice**: za svaki pojam prvo pokušava vlasnik runde (6 s); ako promaši, isti pojam pokušava protivnik. 2 poena po paru.
+  Na kraju se parovi poređaju: spojeni u boji igrača, nespojeni žuti.
 - **Asocijacije** se igraju na smenu, na zajedničkoj tabli. Prvi igra vlasnik runde.
 - Igrači imaju boje: igrač 1 plava, igrač 2 crvena. Ako igrač osveži stranicu, vraća se u istu partiju.
 

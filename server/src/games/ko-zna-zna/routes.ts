@@ -2,11 +2,11 @@ import { Router } from "express";
 import { BaseSession, GameModule, GameResult, SessionStore } from "../../shared/sessions.js";
 import { readData, shuffle } from "../../shared/data.js";
 
-// Pravila Ko zna zna: 10 pitanja, tačan odgovor +10, netačan -5, preskočeno 0.
+// Pravila Ko zna zna: 10 pitanja, tačan odgovor +6, netačan -3, preskočeno 0 (kao u originalu).
 export const QUESTION_COUNT = 10;
 export const SECONDS_PER_QUESTION = 10;
-export const POINTS_CORRECT = 10;
-export const POINTS_WRONG = -5;
+export const POINTS_CORRECT = 6;
+export const POINTS_WRONG = -3;
 const GRACE_MS = 1500;
 const PAUSE_SECONDS = 1.5; // pauza posle odgovora (prikaz tačnog odgovora)
 
