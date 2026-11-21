@@ -51,7 +51,11 @@ const upper = (s: string) => s.toLocaleUpperCase("sr-Latn");
 
 function detailText(game: GameId, d: Record<string, unknown> | null): string {
   if (!d) return "";
-  if (game === "slagalica") return d.word ? `${upper(String(d.word))} (${d.length} slova)` : "bez reči";
+  if (game === "slagalica") {
+    if (d.word) return `${upper(String(d.word))} (${d.length} slova)`;
+    if (d.attempted) return `${upper(String(d.attempted))} ✗ nije u rečniku`;
+    return "bez reči";
+  }
   if (game === "moj-broj") return d.value === null || d.value === undefined ? "bez rezultata" : `${d.value} (razlika ${d.distance})`;
   if (game === "skocko") return d.attempts ? `pogođeno iz ${d.attempts}. pokušaja` : "nije pogođeno";
   return "";
@@ -252,6 +256,11 @@ export default function Match({ mode, code, name, onExit }: { mode: "create" | "
             <small>{detailText(r.game, r.details?.[1 - state.you] ?? null)}</small>
           </div>
         </div>
+        {r.game === "slagalica" && r.details?.[0]?.longest ? (
+          <p className="best center">
+            Najduža moguća reč: <strong>{upper(String(r.details[0].longest))}</strong>
+          </p>
+        ) : null}
         <p className="waiting-note">
           {state.roundIndex + 1 < state.gameCount ? "Sledeća igra uskoro…" : "Konačan rezultat uskoro…"}
         </p>

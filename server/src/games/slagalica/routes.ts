@@ -20,7 +20,7 @@ export const slagalicaModule: GameModule<string[]> = {
   createSession,
   forceFinish(id) {
     const game = store.get(id);
-    if (game) store.complete(game, { points: 0, detail: { word: "", length: 0 } });
+    if (game) store.complete(game, { points: 0, detail: { word: "", length: 0, attempted: "", longest: longestWord(game.letters) } });
   },
   maxDurationSeconds: TIME_LIMIT_SECONDS,
 };
@@ -69,6 +69,11 @@ slagalicaRouter.post("/:id/submit", (req, res) => {
   const letterCount = (tiles as number[]).length;
   const points = accepted ? letterCount * POINTS_PER_LETTER : 0;
 
-  store.complete(game, { points, detail: { word: accepted ? word : "", length: accepted ? letterCount : 0 } });
-  res.json({ word, accepted, timeUp, points, longest: longestWord(game.letters) });
+  const longest = longestWord(game.letters);
+  // u partiji u dvoje protivnik vidi i reč koja nije priznata (attempted), da bi mogli da uporede
+  store.complete(game, {
+    points,
+    detail: { word: accepted ? word : "", length: accepted ? letterCount : 0, attempted: word, longest },
+  });
+  res.json({ word, accepted, timeUp, points, longest });
 });
