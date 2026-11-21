@@ -7,7 +7,7 @@ import { answerMatches } from "../shared/text.js";
 // - netačan odgovor, predaja ili isteklo vreme poteza: potez prelazi na protivnika
 // - tabla je zajednička, poene dobija onaj ko pogodi
 
-export const TURN_SECONDS = 15;
+export const TURN_SECONDS = 30;
 export const TOTAL_SECONDS = 240;
 export const REVEAL_PAUSE_MS = 3000;
 

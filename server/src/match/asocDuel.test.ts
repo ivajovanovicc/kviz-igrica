@@ -35,14 +35,14 @@ test("tačna kolona: poeni i ostaje na potezu; konačno završava igru", async (
   duel.guess(0, 0, "REKA");
   let v = duel.view();
   assert.equal(v.columns[0].solvedBy, 0);
-  assert.deepEqual(v.points, [8, 0]); // 5 + 3 neotvorena polja
+  assert.deepEqual(v.points, [5, 0]); // 2 + 3 neotvorena polja
   assert.equal(v.turn, 0);
   duel.guess(0, "final", "voda");
   v = duel.view();
   assert.equal(v.finished, true);
   await new Promise((r) => setTimeout(r, 10));
-  // 10 + kolone B, C, D (svaka 5 + 4)
-  assert.deepEqual(result(), [8 + 10 + 27, 0]);
+  // 5 + kolone B, C, D (svaka 2 + 4)
+  assert.deepEqual(result(), [5 + 5 + 18, 0]);
 });
 
 test("predaja poteza", () => {

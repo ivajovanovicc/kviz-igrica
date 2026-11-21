@@ -35,7 +35,10 @@ vlasnik runde pobeđuje kad je izjednačeno, a u igrama na smenu igra prvi.
 - **Ko zna zna**: oba igrača istovremeno vide isto pitanje. Brži tačan odgovor +6, netačan −3.
 - **Spojnice**: za svaki pojam prvo pokušava vlasnik runde (6 s); ako promaši, isti pojam pokušava protivnik. 2 poena po paru.
   Na kraju se parovi poređaju: spojeni u boji igrača, nespojeni žuti.
-- **Asocijacije** se igraju na smenu, na zajedničkoj tabli. Prvi igra vlasnik runde.
+- **Asocijacije** se igraju na smenu, na zajedničkoj tabli; prvi igra vlasnik runde. Igrač na potezu (30 s) otvori polje,
+  pa kuca rešenje kolone ili konačno rešenje, ili klikne „Dalje“. Tačan odgovor: ostaje na potezu.
+  Kolona: 2 poena + 1 za svako neotvoreno polje. Konačno rešenje: 5 + poeni za sve nerešene kolone.
+  Otvorena polja su žuta, rešene kolone u boji igrača; na kraju se nerešeno prikaže žuto.
 - Igrači imaju boje: igrač 1 plava, igrač 2 crvena. Ako igrač osveži stranicu, vraća se u istu partiju.
 
 Na lokalnom računaru drugi igrač se može probati u incognito prozoru. Za igru sa nekim preko interneta igricu treba

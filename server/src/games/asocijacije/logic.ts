@@ -1,11 +1,11 @@
 // Pravila Asocijacija (za jednog igrača):
 // - 4 kolone (A-D) sa po 4 skrivena polja; igrač otvara polja i pogađa rešenja
-// - rešena kolona: 5 poena + 1 za svako neotvoreno polje u toj koloni
-// - konačno rešenje: 10 poena + bodovi za sve kolone koje još nisu rešene
+// - rešena kolona: 2 poena + 1 za svako neotvoreno polje u toj koloni (kao u originalu)
+// - konačno rešenje: 5 poena + bodovi za sve kolone koje još nisu rešene
 
 export const TIME_LIMIT_SECONDS = 120;
-export const COLUMN_BASE = 5;
-export const FINAL_BASE = 10;
+export const COLUMN_BASE = 2;
+export const FINAL_BASE = 5;
 
 export interface Kolona {
   polja: string[];
