@@ -169,7 +169,6 @@ export default function AsocijacijeDuel({ names }: { names: string[] }) {
       )}
 
       {error && <p className="error center">{error}</p>}
-      {state.finished && <p className="waiting-note">Rezultat uskoro…</p>}
     </main>
   );
 }

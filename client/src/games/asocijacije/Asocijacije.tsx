@@ -173,7 +173,7 @@ export default function Asocijacije({ onExit, preset }: { onExit?: () => void; p
           <p className="result-text">
             {board.timeUp ? "Vreme je isteklo. " : ""}Osvojeno {board.score} poena.
           </p>
-          {preset ? <p className="waiting-note">Čeka se protivnik…</p> : <button className="action" onClick={start}>Nova partija</button>}
+          {!preset && <button className="action" onClick={start}>Nova partija</button>}
         </div>
       ) : (
         <>

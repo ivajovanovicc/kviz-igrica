@@ -127,7 +127,7 @@ export default function Spojnice({ onExit, preset }: { onExit?: () => void; pres
           <p className="result-text">
             {summary.timeUp ? "Vreme je isteklo. " : ""}Osvojeno {summary.points} poena.
           </p>
-          {preset ? <p className="waiting-note">Čeka se protivnik…</p> : <button className="action" onClick={start}>Nova partija</button>}
+          {!preset && <button className="action" onClick={start}>Nova partija</button>}
         </div>
       )}
     </main>

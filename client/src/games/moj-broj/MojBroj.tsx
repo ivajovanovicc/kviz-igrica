@@ -167,7 +167,7 @@ export default function MojBroj({ onExit, preset }: { onExit?: () => void; prese
             {result.best.value === result.target ? "Moguće rešenje" : `Najbliže moguće (${result.best.value})`}:{" "}
             <strong>{result.best.expr.replace(/\*/g, "×").replace(/\//g, "÷")}</strong>
           </p>
-          {preset ? <p className="waiting-note">Čeka se protivnik…</p> : <button className="action" onClick={start}>Nova partija</button>}
+          {!preset && <button className="action" onClick={start}>Nova partija</button>}
         </div>
       ) : (
         <>

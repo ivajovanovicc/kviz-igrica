@@ -99,7 +99,7 @@ export default function KoZnaZna({ onExit, preset }: { onExit?: () => void; pres
           <p className="best">
             Tačnih: {stats.correct} · Netačnih: {stats.wrong} · Preskočenih: {stats.skipped}
           </p>
-          {preset ? <p className="waiting-note">Čeka se protivnik…</p> : <button className="action" onClick={start}>Nova partija</button>}
+          {!preset && <button className="action" onClick={start}>Nova partija</button>}
         </div>
       </main>
     );

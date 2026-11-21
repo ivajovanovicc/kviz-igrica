@@ -189,7 +189,7 @@ export default function Skocko({ onExit, preset }: { onExit?: () => void; preset
           <p className="result-text">
             {result.solved ? `Bravo! Osvojeno ${result.points} poena.` : result.timeUp ? "Vreme je isteklo." : "Nije pogođeno."}
           </p>
-          {preset ? <p className="waiting-note">Čeka se protivnik…</p> : <button className="action" onClick={start}>Nova partija</button>}
+          {!preset && <button className="action" onClick={start}>Nova partija</button>}
         </div>
       ) : (
         <div className="picker">

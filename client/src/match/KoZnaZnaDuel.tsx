@@ -70,7 +70,7 @@ export default function KoZnaZnaDuel({ names }: { names: string[] }) {
     const fmt = (n: number) => (n > 0 ? `+${n}` : `${n}`);
     note = `Ti ${fmt(mine)} · ${opp} ${fmt(theirs)}`;
   } else if (answered) {
-    note = state.opponentAnswered ? "" : `Čeka se da ${opp} odgovori…`;
+    note = "";
   } else {
     note = state.opponentAnswered ? `${opp} je već odgovorio/la!` : "Brži tačan odgovor nosi 10 poena.";
   }

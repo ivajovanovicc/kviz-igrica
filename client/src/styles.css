@@ -281,3 +281,34 @@ form.editing input {
 }
 .badge-p0 { background: var(--p0); }
 .badge-p1 { background: var(--p1); }
+
+/* Slagalica: reč na vrhu, provera, dugme, pa slova; posle igre poređenje reči */
+.slagalica-screen .word-box { margin-top: 8px; }
+.word-box {
+  position: relative; display: flex; align-items: center; gap: 10px; min-height: 58px; padding: 10px 14px;
+  border-radius: 12px; background: #e8f2ff; color: var(--bg2);
+}
+.word-box.small { min-height: 48px; }
+.word-text { flex: 1; font-size: 1.5rem; font-weight: 800; letter-spacing: 0.06em; word-break: break-all; }
+.word-box.small .word-text { font-size: 1.25rem; }
+.word-backspace {
+  border: none; background: var(--bg2); color: #fff; border-radius: 8px; width: 44px; height: 38px; font-size: 1.2rem;
+}
+.word-points { font-weight: 800; color: #1f9d55; font-size: 1.2rem; }
+.word-invalid { font-weight: 800; color: #d33; font-size: 1.2rem; }
+.word-check { min-height: 1.4em; text-align: center; font-weight: 700; margin: 8px 0 10px; }
+.word-check.pending { color: #cfe0ff; opacity: 0.85; }
+.slagalica-confirm { margin: 0 0 18px; }
+.slagalica-screen .tiles { gap: 8px; }
+.slagalica-screen .tile { height: 60px; font-size: 1.5rem; }
+.compare { margin-top: 16px; }
+.compare-label { display: block; font-weight: 700; margin-bottom: 6px; opacity: 0.9; }
+.compare.delayed { animation: appear 0.4s ease-out 1.2s both; }
+@keyframes appear { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+.stamp {
+  position: absolute; right: -6px; top: -12px; transform: rotate(8deg); padding: 3px 9px; border-radius: 999px;
+  background: var(--accent); color: var(--bg2); font-size: 0.75rem; font-weight: 800; text-transform: uppercase;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
+}
+.color-border-p0 { box-shadow: inset 5px 0 0 var(--p0); }
+.color-border-p1 { box-shadow: inset 5px 0 0 var(--p1); }

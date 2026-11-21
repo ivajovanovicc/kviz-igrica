@@ -85,64 +85,70 @@ export default function Slagalica({ onExit, preset }: { onExit?: () => void; pre
 
   const word = picked.map((i) => upper(config.letters[i])).join("");
 
+  // red ispod reči: provera reči (dok se slaže) ili konačna ocena (posle potvrde)
+  let status: { text: string; cls: string } | null = null;
+  if (result) {
+    if (result.accepted) status = { text: "✓ Reč je pronađena", cls: "ok" };
+    else if (result.word) status = { text: "✗ Reč nije pronađena", cls: "bad" };
+  } else if (picked.length >= 2) {
+    status = checkInfo
+      ? checkInfo.exists
+        ? { text: "✓ Reč je pronađena", cls: "ok" }
+        : { text: "✗ Reč nije pronađena", cls: "bad" }
+      : { text: "Proveravam…", cls: "pending" };
+  }
+
   return (
-    <main className="screen">
+    <main className="screen slagalica-screen">
       <GameHeader title="Slagalica" timeLeft={timeLeft} timeLimit={config.timeLimitSeconds} onExit={onExit} />
 
-      <div className="tiles">
-        {config.letters.map((l, i) => (
-          <button
-            key={i}
-            className="tile"
-            disabled={!!result || picked.includes(i)}
-            onClick={() => setPicked([...picked, i])}
-          >
-            {upper(l)}
+      {/* Reč na vrhu, ispod nje provera, pa dugme, pa slova */}
+      <div className="word-box">
+        <span className="word-text">{result ? upper(result.word) : word}</span>
+        {/* u dvoje poeni zavise od protivnikove reči, pa se prikazuju tek na kraju */}
+        {result && result.accepted && !preset && <span className="word-points">+{result.points}</span>}
+        {!result && picked.length > 0 && (
+          <button className="word-backspace" onClick={() => setPicked(picked.slice(0, -1))} aria-label="obriši slovo">
+            ⌫
           </button>
-        ))}
+        )}
       </div>
+      <p className={`word-check ${status?.cls ?? ""}`}>{status?.text ?? "\u00a0"}</p>
 
-      <div className="expression word">
-        <span>{word || "Složi reč…"}</span>
-        <span className="expression-value">{picked.length ? `${picked.length} slova` : ""}</span>
-      </div>
-      {checkInfo && (
-        <p className={`word-check ${checkInfo.exists ? "ok" : "bad"}`}>
-          {checkInfo.exists ? "✓ Reč postoji" : "✗ Ta reč nije u rečniku (0 poena)"}
-        </p>
-      )}
-
-      {result ? (
-        <div className="result">
-          <p className="result-text">
-            {result.accepted
-              ? `Bravo! „${upper(result.word)}“ donosi ${result.points} poena.`
-              : result.timeUp
-                ? "Vreme je isteklo."
-                : result.word
-                  ? `Reč „${upper(result.word)}“ nije u rečniku.`
-                  : "Reč nije složena."}
-          </p>
-          {result.longest && (
-            <p className="best">
-              Najduža moguća reč: <strong>{upper(result.longest)}</strong>
-            </p>
-          )}
-          {preset ? <p className="waiting-note">Čeka se protivnik…</p> : <button className="action" onClick={start}>Nova partija</button>}
-        </div>
-      ) : (
+      {!result && (
         <>
-          <div className="row-buttons">
-            <button className="op-button" disabled={!picked.length} onClick={() => setPicked(picked.slice(0, -1))}>
-              ⌫ Obriši
-            </button>
-            <button className="op-button" disabled={!picked.length} onClick={() => setPicked([])}>
-              Poništi sve
-            </button>
-          </div>
-          <button className="action wide" onClick={submit} disabled={busy || !picked.length}>
+          <button className="action wide slagalica-confirm" onClick={submit} disabled={busy || !picked.length}>
             Potvrdi
           </button>
+          <div className="tiles">
+            {config.letters.map((l, i) => (
+              <button
+                key={i}
+                className="tile"
+                disabled={picked.includes(i)}
+                onClick={() => setPicked([...picked, i])}
+              >
+                {upper(l)}
+              </button>
+            ))}
+          </div>
+        </>
+      )}
+
+      {/* Vežbanje: rezultat i najduža moguća reč. U igri u dvoje poređenje prikazuje partija. */}
+      {result && !preset && (
+        <>
+          {result.longest && (
+            <div className="compare">
+              <span className="compare-label">Kompjuter:</span>
+              <div className="word-box small">
+                <span className="word-text">{upper(result.longest)}</span>
+              </div>
+            </div>
+          )}
+          <div className="result">
+            <button className="action" onClick={start}>Nova partija</button>
+          </div>
         </>
       )}
     </main>

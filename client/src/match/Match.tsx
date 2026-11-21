@@ -236,6 +236,58 @@ export default function Match({ mode, code, name, onExit }: { mode: "create" | "
     );
   }
 
+  // Slagalica: posle igre ista strana, ispod moje reči protivnikova reč pa reč kompjutera
+  if (state.phase === "round-result" && state.round?.points && state.round.game === "slagalica") {
+    const r = state.round;
+    const d = (i: number) => (r.details?.[i] ?? {}) as Record<string, unknown>;
+    const mine = d(state.you);
+    const theirs = d(1 - state.you);
+    const myLen = Number(mine.length ?? 0);
+    const oppLen = Number(theirs.length ?? 0);
+    const wordOf = (x: Record<string, unknown>) => upper(String(x.word || x.attempted || ""));
+    const longest = String(mine.longest ?? theirs.longest ?? "");
+    return (
+      <div>
+        <div className="screen match-top">{scoreboard}</div>
+        <main className="screen slagalica-screen">
+          <header className="game-header">
+            <span className="header-spacer" />
+            <h2>Slagalica</h2>
+            <span className="header-spacer" />
+          </header>
+          <div className="timebar" />
+          <div className={`word-box color-border-p${state.you}`}>
+            <span className="word-text">{wordOf(mine) || "—"}</span>
+            {r.points![state.you] > 0 && <span className="word-points">+{r.points![state.you]}</span>}
+            {myLen > oppLen && <span className="stamp">duža reč</span>}
+          </div>
+          <p className={`word-check ${myLen > 0 ? "ok" : mine.attempted ? "bad" : ""}`}>
+            {myLen > 0 ? "✓ Reč je pronađena" : mine.attempted ? "✗ Reč nije pronađena" : "\u00a0"}
+          </p>
+
+          <div className="compare">
+            <span className="compare-label">{opp?.name}:</span>
+            <div className={`word-box small color-border-p${1 - state.you}`}>
+              <span className="word-text">{wordOf(theirs) || "—"}</span>
+              {r.points![1 - state.you] > 0 && <span className="word-points">+{r.points![1 - state.you]}</span>}
+              {oppLen > myLen && <span className="stamp">duža reč</span>}
+              {!oppLen && theirs.attempted ? <span className="word-invalid">✗</span> : null}
+            </div>
+          </div>
+
+          {longest && (
+            <div className="compare delayed">
+              <span className="compare-label">Kompjuter:</span>
+              <div className="word-box small">
+                <span className="word-text">{upper(longest)}</span>
+              </div>
+            </div>
+          )}
+        </main>
+      </div>
+    );
+  }
+
   if (state.phase === "round-result" && state.round?.points) {
     const r = state.round;
     const myPts = r.points![state.you];
@@ -261,21 +313,16 @@ export default function Match({ mode, code, name, onExit }: { mode: "create" | "
             Najduža moguća reč: <strong>{upper(String(r.details[0].longest))}</strong>
           </p>
         ) : null}
-        <p className="waiting-note">
-          {state.roundIndex + 1 < state.gameCount ? "Sledeća igra uskoro…" : "Konačan rezultat uskoro…"}
-        </p>
       </main>
     );
   }
 
   // Igra u toku
   const game = current && current.roundIndex === state.roundIndex ? current : null;
-  const oppDone = state.round?.done[1 - state.you];
   return (
     <div>
       <div className="screen match-top">
         {scoreboard}
-        {oppDone && <p className="opp-done">{opp?.name} je završio/la ovu igru.</p>}
       </div>
       {!game ? (
         <main className="screen">Učitavanje igre…</main>
