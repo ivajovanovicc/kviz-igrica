@@ -350,3 +350,113 @@ form.editing input {
   border: 1px solid #fff; border-radius: 999px; padding: 3px 9px; font-size: 0.78rem; font-weight: 700;
   background: #4cc9f0; color: var(--bg2); box-shadow: 0 1px 3px rgba(0,0,0,0.3);
 }
+
+/* ================================================================
+   TEMA „TV kviz“: tamnoplava pozadina, zlatni akcenti, svetloplava
+   „3D“ dugmad sa senkom ispod, debeo zaobljen font (Baloo 2).
+   Sve boje teme su ovde, na jednom mestu.
+   ================================================================ */
+:root {
+  --bg1: #173a8f;          /* svetliji plavi panel */
+  --bg2: #0f2a6b;          /* osnovna tamnoplava */
+  --bg-deep: #0a1f52;      /* najtamniji paneli (pitanje, reč) */
+  --panel: #173a8f;
+  --panel-border: #2c57c7;
+  --accent: #ffc93c;       /* zlatna */
+  --accent-shadow: #c9960f;
+  --btn: #cfeaff;          /* svetloplavo dugme */
+  --btn-shadow: #7fb3e0;
+  --btn-text: #0f2a6b;
+  --p0: #2f7cf6;           /* igrač 1: plavi */
+  --p0-shadow: #1b52b0;
+  --p1: #ef4b55;           /* igrač 2: crveni */
+  --p1-shadow: #a92b33;
+  font-family: "Baloo 2", system-ui, sans-serif;
+}
+body { background: radial-gradient(circle at 50% 0%, #1d4bb0 0%, var(--bg2) 55%, #08184a 100%); }
+button, input { font-family: inherit; }
+
+/* naslovi */
+.title, .game-header h2 { color: var(--accent); font-weight: 800; letter-spacing: 0.02em; text-shadow: 0 2px 0 rgba(0, 0, 0, 0.35); }
+
+/* paneli */
+.scoreboard, .turn-banner, .question, .kzz-meta, .share-link, .board-row, .round-result > div {
+  background: var(--panel); border: 2px solid var(--panel-border);
+}
+.question { background: var(--bg-deep); font-weight: 800; text-transform: uppercase; letter-spacing: 0.02em; }
+.turn-banner { font-weight: 700; text-transform: uppercase; font-size: 0.9rem; letter-spacing: 0.03em; }
+.turn-banner.mine { background: var(--bg-deep); color: var(--accent); border-color: var(--accent); }
+.timebar { background: var(--bg-deep); height: 8px; border-radius: 4px; }
+.timer { background: var(--btn); color: var(--btn-text); border-radius: 999px; padding: 0 10px; font-weight: 800; box-shadow: 0 2px 0 var(--btn-shadow); }
+.timer:empty { display: none; }
+.timer.low { background: var(--accent); color: var(--btn-text); }
+.score-total { color: #fff; }
+.score-player.color-p0 .score-name { color: #7cb8ff; }
+.score-player.color-p1 .score-name { color: #ff8a90; }
+
+/* svetloplava 3D dugmad (odgovori, slova, brojevi, polja) */
+.option, .tile, .number-button, .symbol-button, .pair-button, .pair-item, .asoc-field, .asoc-solution, .asoc-final,
+.game-button, .op-button, .slot, .word-box {
+  background: var(--btn); color: var(--btn-text); border: none; border-radius: 10px;
+  box-shadow: 0 3px 0 var(--btn-shadow); font-weight: 800;
+}
+.option, .pair-item, .asoc-field, .asoc-solution, .asoc-final, .tile, .word-text { text-transform: uppercase; letter-spacing: 0.02em; }
+.option:not(:disabled):active, .tile:not(:disabled):active, .number-button:not(:disabled):active,
+.symbol-button:not(:disabled):active, .pair-button:not(:disabled):active, .asoc-field:not(:disabled):active,
+.op-button:not(:disabled):active, .action:not(:disabled):active, .game-button:not(:disabled):active {
+  transform: translateY(2px); box-shadow: 0 1px 0 var(--btn-shadow);
+}
+/* iskorišćeno / zaključano: utišana plava, bez senke */
+.tile:disabled, .number-button:disabled,
+.option:disabled:not(.highlight):not(.owner-p0):not(.owner-p1):not(.owner-both):not(.fill-p0):not(.fill-p1):not(.correct):not(.wrong):not(.chosen),
+.asoc-field:not(.open):disabled,
+.pair-item:not(.owner-p0):not(.owner-p1):not(.current):not(.unsolved):not(.missed):not(.pair-button):not(.correct):not(.wrong):not(.active) {
+  background: #5f86c9; color: #1a3b7a; box-shadow: none; opacity: 1;
+}
+.pair-button:disabled:not(.owner-p0):not(.owner-p1) { opacity: 1; }
+.asoc-field:not(.open) { background: #5f86c9; color: #1a3b7a; box-shadow: 0 3px 0 #3f66aa; }
+.asoc-field:not(.open):disabled { opacity: 0.85; }
+.asoc-solution, .asoc-final { background: #dff1ff; }
+.op-button { background: var(--bg1); color: #fff; box-shadow: 0 3px 0 #0a1f52; }
+.game-number { background: var(--accent); color: var(--btn-text); }
+.symbol-button.confirm, .symbol-button { background: var(--btn); }
+.slot { background: #e9f4ff; box-shadow: inset 0 2px 0 rgba(0, 0, 0, 0.08); }
+.slot.filled { background: #fff; }
+.word-box { background: #e9f4ff; }
+.word-box.small .word-text { color: var(--btn-text); }
+
+/* zlatna dugmad (glavne akcije) */
+.action, .symbol-button.confirm, .answer-ok {
+  background: var(--accent); color: var(--btn-text); font-weight: 800; text-transform: uppercase; letter-spacing: 0.03em;
+  border-radius: 12px; box-shadow: 0 4px 0 var(--accent-shadow);
+}
+.target { background: var(--accent); color: var(--btn-text); font-weight: 800; box-shadow: 0 4px 0 var(--accent-shadow); }
+
+/* žuto = tačno / trenutno / otvoreno */
+.option.highlight, .pair-item.current, .pair-item.unsolved, .asoc-field.opened,
+.asoc-field.unsolved, .asoc-solution.unsolved, .asoc-final.unsolved {
+  background: var(--accent) !important; color: var(--btn-text) !important; box-shadow: 0 3px 0 var(--accent-shadow) !important;
+}
+
+/* boje igrača sa tamnijom senkom ispod */
+.owner-p0, .bubble-p0, .badge-p0 { background: var(--p0) !important; color: #fff !important; box-shadow: 0 3px 0 var(--p0-shadow) !important; }
+.owner-p1, .bubble-p1, .badge-p1 { background: var(--p1) !important; color: #fff !important; box-shadow: 0 3px 0 var(--p1-shadow) !important; }
+.option.fill-p0, .option.fill-p1 { box-shadow: 0 0 0 4px var(--accent) !important; }
+
+/* razno */
+.stamp { background: var(--accent); color: var(--btn-text); }
+.word-check.ok { color: #8ff0b4; }
+.word-check.bad { color: #ff9aa0; }
+.value-bubble { font-weight: 800; }
+.peg { background: rgba(255, 255, 255, 0.25); }
+.peg.red { background: var(--p1); }
+.peg.yellow { background: var(--accent); }
+.board-row.solution { background: var(--bg-deep); }
+.name-form input { font-weight: 700; color: var(--btn-text); }
+.history td { font-weight: 600; }
+
+/* vežbanje: tačno zeleno, pogrešno crveno, trenutni pojam i otvorena polja žuti */
+.option.correct, .pair-item.correct { background: #2fbf71 !important; color: #fff !important; box-shadow: 0 3px 0 #1d8a50 !important; }
+.option.wrong, .pair-item.wrong { background: var(--p1) !important; color: #fff !important; box-shadow: 0 3px 0 var(--p1-shadow) !important; }
+.pair-item.active { background: var(--accent); color: var(--btn-text); box-shadow: 0 3px 0 var(--accent-shadow); outline: none; }
+.asoc-field.open:not(.owner-p0):not(.owner-p1) { background: var(--accent); color: var(--btn-text); box-shadow: 0 3px 0 var(--accent-shadow); }
