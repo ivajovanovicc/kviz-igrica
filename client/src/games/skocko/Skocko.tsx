@@ -9,8 +9,8 @@ export const SYMBOLS = [
   { glyph: "♣", color: "#2ecc71", label: "tref" },
   { glyph: "♠", color: "#1b1f3b", label: "pik" },
   { glyph: "♥", color: "#e63946", label: "herc" },
-  { glyph: "♦", color: "#ff8c42", label: "karo" },
-  { glyph: "★", color: "#4cc9f0", label: "zvezda" },
+  { glyph: "♦", color: "#e63946", label: "karo" },
+  { glyph: "★", color: "#d4a017", label: "zvezda" },
 ];
 
 interface Config {
