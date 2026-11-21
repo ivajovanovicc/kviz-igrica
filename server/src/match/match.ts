@@ -6,11 +6,14 @@ import { spojniceModule } from "../games/spojnice/routes.js";
 import { skockoModule } from "../games/skocko/routes.js";
 import { koZnaZnaModule } from "../games/ko-zna-zna/routes.js";
 import { asocijacijeModule } from "../games/asocijacije/routes.js";
-import { GAME_ORDER, GameId, scoreRound } from "./rules.js";
+import { GAME_ORDER, GameId, roundOwner, scoreRound } from "./rules.js";
 import { AsocDuel } from "./asocDuel.js";
 import { SpojniceDuel } from "./spojniceDuel.js";
 import { KzzDuel } from "./kzzDuel.js";
 import { generate as generateSpojnice } from "../games/spojnice/routes.js";
+import { generate as generateKzz } from "../games/ko-zna-zna/routes.js";
+import { generateAsocijacija } from "../games/asocijacije/routes.js";
+import type { Asocijacija } from "../games/asocijacije/logic.js";
 
 // Partija u dvoje: dva igrača igraju istih šest igara, istim redom, sa istim zadacima.
 
@@ -57,7 +60,10 @@ interface Match {
   phase: Phase;
   rounds: Round[];
   createdAt: number;
-  firstAsocStarter?: number;
+  // da se u istoj partiji ne ponove teme, pitanja i table
+  usedSpojnice: string[];
+  usedQuestions: string[];
+  usedBoards: Asocijacija[];
 }
 
 const matches = new Map<string, Match>();
@@ -86,9 +92,11 @@ export function setupMatches(io: Server) {
       players: match.players.map((p) => ({ name: p.name, total: p.total, connected: p.socketId !== null })),
       roundIndex: match.rounds.length - 1,
       gameCount: GAME_ORDER.length,
+      order: GAME_ORDER,
       round: round
         ? {
             game: round.game,
+            owner: roundOwner(match.rounds.length - 1),
             done: round.results.map((r) => r !== null),
             points: round.points,
             details: round.points ? round.results.map((r) => r?.detail ?? null) : null,
@@ -125,32 +133,26 @@ export function setupMatches(io: Server) {
   const finishBoth = (match: Match, round: Round) => (points: [number, number]) =>
     points.forEach((pts, i) => onResult(match, round, i, { points: pts }));
 
-  // Ko je na zaostatku, počinje (kod nerešenog: igrač koji je napravio partiju)
-  const behind = (match: Match) => (match.players[1].total < match.players[0].total ? 1 : 0);
-
   function startLiveGame(match: Match, round: Round) {
     const names = match.players.map((p) => p.name);
     const onChange = () => emitLive(match, round);
+    const owner = roundOwner(match.rounds.length - 1); // u igrama na smenu prvi igra vlasnik runde
     if (round.game === "asocijacije") {
-      // prvu Asocijaciju počinje igrač koji zaostaje, drugu onaj drugi
-      let first: number;
-      if (match.firstAsocStarter === undefined) {
-        first = behind(match);
-        match.firstAsocStarter = first;
-      } else {
-        first = 1 - match.firstAsocStarter;
-      }
-      const duel = new AsocDuel(asocijacijeModule.generate(), first, names, onChange, finishBoth(match, round));
+      const board = generateAsocijacija(match.usedBoards);
+      match.usedBoards.push(board);
+      const duel = new AsocDuel(board, owner, names, onChange, finishBoth(match, round));
       round.duel = duel;
       round.live = { event: "asoc:state", view: () => duel.view(), stop: () => duel.stop() };
     } else if (round.game === "spojnice") {
-      const p1 = generateSpojnice();
-      const p2 = generateSpojnice(p1.set.tema);
-      const duel = new SpojniceDuel([p1, p2], behind(match), names, onChange, finishBoth(match, round));
+      const puzzle = generateSpojnice(match.usedSpojnice);
+      match.usedSpojnice.push(puzzle.set.tema);
+      const duel = new SpojniceDuel([puzzle], owner, names, onChange, finishBoth(match, round));
       round.spojDuel = duel;
       round.live = { event: "spojnice:state", view: () => duel.view(), stop: () => duel.stop() };
     } else {
-      const duel = new KzzDuel(koZnaZnaModule.generate(), onChange, finishBoth(match, round));
+      const puzzle = generateKzz(match.usedQuestions);
+      match.usedQuestions.push(...puzzle.map((q) => q.question));
+      const duel = new KzzDuel(puzzle, onChange, finishBoth(match, round));
       round.kzzDuel = duel;
       round.live = { event: "kzz:state", view: (p) => duel.view(p), stop: () => duel.stop() };
     }
@@ -195,7 +197,11 @@ export function setupMatches(io: Server) {
       return;
     }
     clearTimeout(round.watchdog);
-    round.points = scoreRound(round.game, round.results as [GameResult, GameResult]);
+    round.points = scoreRound(
+      round.game,
+      round.results as [GameResult, GameResult],
+      roundOwner(match.rounds.indexOf(round))
+    );
     match.players.forEach((p, i) => (p.total += round.points![i]));
     match.phase = "round-result";
     broadcast(match);
@@ -225,6 +231,9 @@ export function setupMatches(io: Server) {
         phase: "waiting",
         rounds: [],
         createdAt: Date.now(),
+        usedSpojnice: [],
+        usedQuestions: [],
+        usedBoards: [],
       };
       matches.set(match.code, match);
       attach(socket, match, 0);

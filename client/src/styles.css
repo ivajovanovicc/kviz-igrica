@@ -312,3 +312,18 @@ form.editing input {
 }
 .color-border-p0 { box-shadow: inset 5px 0 0 var(--p0); }
 .color-border-p1 { box-shadow: inset 5px 0 0 var(--p1); }
+
+/* Moj broj: traženi broj, rezultati igrača, izraz, potvrda, a brojevi i operacije na dnu */
+.moj-broj-screen { display: flex; flex-direction: column; min-height: calc(100vh - 110px); }
+.moj-broj-screen .target { margin-bottom: 10px; }
+.value-bubbles { display: flex; justify-content: space-between; margin: 0 0 14px; }
+.value-bubble { min-width: 84px; padding: 8px 14px; border-radius: 999px; text-align: center; font-weight: 800; font-size: 1.2rem; color: #fff; }
+.bubble-p0 { background: var(--p0); }
+.bubble-p1 { background: var(--p1); }
+.expression-box .word-text { font-size: 1.3rem; letter-spacing: 0.02em; }
+.expression-box .expression-value { color: #1f6fd1; font-weight: 800; white-space: nowrap; }
+.mb-confirm { margin: 12px 0 0; }
+.mb-pad { margin-top: auto; padding-top: 20px; display: grid; gap: 12px; }
+.moj-broj-screen .ops { grid-template-columns: repeat(6, 1fr); }
+.stamps { position: absolute; right: -6px; top: -14px; display: flex; gap: 4px; }
+.stamps .stamp { position: static; }

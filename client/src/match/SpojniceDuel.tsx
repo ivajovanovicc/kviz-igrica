@@ -6,6 +6,7 @@ import { spojniceStore } from "./asocStore";
 
 interface State {
   half: number;
+  halves: number;
   tema: string;
   left: string[];
   right: string[];
@@ -65,7 +66,7 @@ export default function SpojniceDuel({ names }: { names: string[] }) {
 
   let status: string;
   if (state.phase === "reveal" || state.finished)
-    status = state.half === 0 ? "Kraj prve polovine. Tačni parovi su ispod." : "Kraj Spojnica.";
+    status = state.half + 1 < state.halves ? "Kraj prve polovine. Tačni parovi su ispod." : "Kraj Spojnica.";
   else if (myTurn) status = state.isSecondChance ? "Tvoja šansa: protivnik je promašio!" : "Tvoj potez: spoji označeni pojam.";
   else status = `Na potezu je ${names[state.actor]}${state.isSecondChance ? " (šansa posle promašaja)" : ""}.`;
 
@@ -73,7 +74,7 @@ export default function SpojniceDuel({ names }: { names: string[] }) {
     <main className="screen spojnice-duel">
       <header className="game-header">
         <span className="header-spacer" />
-        <h2>Spojnice {state.half + 1}/2</h2>
+        <h2>Spojnice</h2>
         <span className={`timer ${left <= 3 && playing ? "low" : ""}`}>{playing ? `${left}s` : ""}</span>
       </header>
       <div className="timebar">

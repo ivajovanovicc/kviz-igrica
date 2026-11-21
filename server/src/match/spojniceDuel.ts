@@ -1,7 +1,7 @@
 import { POINTS_PER_PAIR, Puzzle } from "../games/spojnice/routes.js";
 
 // Spojnice u dvoje, na smenu:
-// - igra ima dve polovine sa različitim temama; u prvoj je "glavni" igrač A, u drugoj B
+// - igra ima jednu ili dve polovine (teme); u prvoj je "glavni" igrač A, u drugoj B
 // - za svaki levi pojam redom: prvo pokušava glavni igrač
 // - ako promaši (ili mu istekne vreme), isti pojam odmah pokušava protivnik
 // - ako ni on ne pogodi, ide se na sledeći pojam, opet prvo glavni igrač
@@ -14,6 +14,7 @@ type Phase = "play" | "reveal";
 
 export interface SpojniceDuelView {
   half: number; // 0 ili 1
+  halves: number; // koliko polovina ima igra
   tema: string;
   left: string[];
   right: string[];
@@ -52,7 +53,7 @@ export class SpojniceDuel {
   private timer?: NodeJS.Timeout;
 
   constructor(
-    puzzles: [Puzzle, Puzzle],
+    puzzles: Puzzle[], // u partiji: jedna tema po rundi
     firstPlayer: number,
     private names: string[],
     private onChange: () => void,
@@ -113,8 +114,8 @@ export class SpojniceDuel {
     clearTimeout(this.timer);
     this.phase = "reveal";
     this.timer = setTimeout(() => {
-      if (this.halfIndex === 0) {
-        this.halfIndex = 1;
+      if (this.halfIndex + 1 < this.halves.length) {
+        this.halfIndex++;
         this.phase = "play";
         this.current = 0;
         this.secondChance = false;
@@ -163,6 +164,7 @@ export class SpojniceDuel {
     const playing = this.phase === "play" && !this.finished;
     return {
       half: this.halfIndex,
+      halves: this.halves.length,
       tema: set.tema,
       left: set.parovi.map((p) => p[0]),
       right: order.map((k) => set.parovi[k][1]),

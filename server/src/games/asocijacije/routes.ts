@@ -62,6 +62,12 @@ function createSession(board: Asocijacija, onFinish?: (r: GameResult) => void) {
   return { gameId, timeLimitSeconds: TIME_LIMIT_SECONDS, ...view(game) };
 }
 
+// Tabla koja još nije bila u ovoj partiji
+export function generateAsocijacija(used: Asocijacija[] = []): Asocijacija {
+  const fresh = boards.filter((b) => !used.includes(b));
+  return pickRandom(fresh.length ? fresh : boards);
+}
+
 export const asocijacijeModule: GameModule<Asocijacija> = {
   generate: () => pickRandom(boards),
   createSession,

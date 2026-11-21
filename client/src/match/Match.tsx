@@ -19,9 +19,13 @@ const NAMES: Record<GameId, string> = {
   asocijacije: "Asocijacije",
 };
 
-// Nazivi igara po redu u partiji (isti redosled kao na serveru)
-const ROUND_LABELS = ["Slagalica", "Moj broj", "Skočko", "Ko zna zna", "Spojnice", "Asocijacije 1", "Asocijacije 2"];
-const roundLabel = (i: number, game: GameId) => ROUND_LABELS[i] ?? NAMES[game];
+// Naziv runde: "Slagalica 1", "Slagalica 2"... (redosled šalje server)
+function roundLabel(order: GameId[] | undefined, i: number, game: GameId) {
+  if (!order) return NAMES[game];
+  const nth = order.slice(0, i + 1).filter((g) => g === game).length;
+  const total = order.filter((g) => g === game).length;
+  return total > 1 ? `${NAMES[game]} ${nth}` : NAMES[game];
+}
 
 interface MatchState {
   code: string;
@@ -30,8 +34,10 @@ interface MatchState {
   players: { name: string; total: number; connected: boolean }[];
   roundIndex: number;
   gameCount: number;
+  order?: GameId[];
   round: {
     game: GameId;
+    owner: number;
     done: boolean[];
     points: [number, number] | null;
     details: (Record<string, unknown> | null)[] | null;
@@ -224,7 +230,7 @@ export default function Match({ mode, code, name, onExit }: { mode: "create" | "
           <tbody>
             {state.history.map((h, i) => (
               <tr key={i}>
-                <td>{roundLabel(i, h.game)}</td>
+                <td>{roundLabel(state.order, i, h.game)}</td>
                 <td>{h.points[state.you]}</td>
                 <td>{h.points[1 - state.you]}</td>
               </tr>
@@ -246,20 +252,39 @@ export default function Match({ mode, code, name, onExit }: { mode: "create" | "
     const oppLen = Number(theirs.length ?? 0);
     const wordOf = (x: Record<string, unknown>) => upper(String(x.word || x.attempted || ""));
     const longest = String(mine.longest ?? theirs.longest ?? "");
+    const longestLength = Number(mine.longestLength ?? theirs.longestLength ?? 0);
+    const lens = [0, 1].map((i) => Number(d(i).length ?? 0));
+    // oznake bonusa kao u originalu: duža reč / moja igra (+6), reč kao kompjuterova (+3)
+    const Stamps = ({ mine: p }: { mine: number }) => {
+      const other = 1 - p;
+      const stamps: string[] = [];
+      if (lens[p] > lens[other]) stamps.push("duža reč +6");
+      else if (lens[p] === lens[other] && lens[p] > 0 && r.owner === p) stamps.push("moja igra +6");
+      if (r.owner === p && longestLength > 0 && lens[p] >= longestLength) stamps.push("kompjuter +3");
+      return (
+        <span className="stamps">
+          {stamps.map((t) => (
+            <span key={t} className="stamp">
+              {t}
+            </span>
+          ))}
+        </span>
+      );
+    };
     return (
       <div>
         <div className="screen match-top">{scoreboard}</div>
         <main className="screen slagalica-screen">
           <header className="game-header">
             <span className="header-spacer" />
-            <h2>Slagalica</h2>
+            <h2>{roundLabel(state.order, state.roundIndex, "slagalica")}</h2>
             <span className="header-spacer" />
           </header>
           <div className="timebar" />
           <div className={`word-box color-border-p${state.you}`}>
             <span className="word-text">{wordOf(mine) || "—"}</span>
             {r.points![state.you] > 0 && <span className="word-points">+{r.points![state.you]}</span>}
-            {myLen > oppLen && <span className="stamp">duža reč</span>}
+            <Stamps mine={state.you} />
           </div>
           <p className={`word-check ${myLen > 0 ? "ok" : mine.attempted ? "bad" : ""}`}>
             {myLen > 0 ? "✓ Reč je pronađena" : mine.attempted ? "✗ Reč nije pronađena" : "\u00a0"}
@@ -270,7 +295,7 @@ export default function Match({ mode, code, name, onExit }: { mode: "create" | "
             <div className={`word-box small color-border-p${1 - state.you}`}>
               <span className="word-text">{wordOf(theirs) || "—"}</span>
               {r.points![1 - state.you] > 0 && <span className="word-points">+{r.points![1 - state.you]}</span>}
-              {oppLen > myLen && <span className="stamp">duža reč</span>}
+              <Stamps mine={1 - state.you} />
               {!oppLen && theirs.attempted ? <span className="word-invalid">✗</span> : null}
             </div>
           </div>
@@ -288,6 +313,55 @@ export default function Match({ mode, code, name, onExit }: { mode: "create" | "
     );
   }
 
+  // Moj broj: posle igre vrednosti oba igrača, moj i protivnikov izraz, a ako niko nije pogodio i rešenje kompjutera
+  if (state.phase === "round-result" && state.round?.points && state.round.game === "moj-broj") {
+    const r = state.round;
+    const d = (i: number) => (r.details?.[i] ?? {}) as Record<string, unknown>;
+    const mine = d(state.you);
+    const theirs = d(1 - state.you);
+    const pretty = (e: unknown) => String(e ?? "").replace(/\*/g, "×").replace(/\//g, "÷");
+    const val = (x: Record<string, unknown>) => (x.value === null || x.value === undefined ? "—" : String(x.value));
+    const best = (mine.best ?? theirs.best) as { value: number; expr: string } | undefined;
+    const nobodyExact = mine.distance !== 0 && theirs.distance !== 0;
+    return (
+      <div>
+        <div className="screen match-top">{scoreboard}</div>
+        <main className="screen moj-broj-screen">
+          <header className="game-header">
+            <span className="header-spacer" />
+            <h2>{roundLabel(state.order, state.roundIndex, "moj-broj")}</h2>
+            <span className="header-spacer" />
+          </header>
+          <div className="timebar" />
+          {current?.config?.target !== undefined && <div className="target">{current.config.target}</div>}
+          <div className="value-bubbles">
+            <span className={`value-bubble bubble-p${state.you}`}>{val(mine)}</span>
+            <span className={`value-bubble bubble-p${1 - state.you}`}>{val(theirs)}</span>
+          </div>
+          <div className={`word-box expression-box color-border-p${state.you}`}>
+            <span className="word-text">{pretty(mine.expression) || "—"}</span>
+            {r.points![state.you] > 0 && <span className="word-points">+{r.points![state.you]}</span>}
+          </div>
+          <div className="compare">
+            <span className="compare-label">{opp?.name}:</span>
+            <div className={`word-box small color-border-p${1 - state.you}`}>
+              <span className="word-text">{pretty(theirs.expression) || "—"}</span>
+              {r.points![1 - state.you] > 0 && <span className="word-points">+{r.points![1 - state.you]}</span>}
+            </div>
+          </div>
+          {nobodyExact && best && (
+            <div className="compare delayed">
+              <span className="compare-label">Kompjuter ({best.value}):</span>
+              <div className="word-box small">
+                <span className="word-text">{pretty(best.expr)}</span>
+              </div>
+            </div>
+          )}
+        </main>
+      </div>
+    );
+  }
+
   if (state.phase === "round-result" && state.round?.points) {
     const r = state.round;
     const myPts = r.points![state.you];
@@ -295,7 +369,7 @@ export default function Match({ mode, code, name, onExit }: { mode: "create" | "
     return (
       <main className="screen">
         {scoreboard}
-        <h2 className="title small">{roundLabel(state.roundIndex, r.game)}</h2>
+        <h2 className="title small">{roundLabel(state.order, state.roundIndex, r.game)}</h2>
         <div className="round-result">
           <div className={`color-p${state.you}`}>
             <span className="score-name">Ti</span>
@@ -329,7 +403,7 @@ export default function Match({ mode, code, name, onExit }: { mode: "create" | "
       ) : game.game === "slagalica" ? (
         <Slagalica key={game.roundIndex} preset={game.config} />
       ) : game.game === "moj-broj" ? (
-        <MojBroj key={game.roundIndex} preset={game.config} />
+        <MojBroj key={game.roundIndex} preset={game.config} you={state.you} />
       ) : game.game === "spojnice" ? (
         <SpojniceDuel key={game.roundIndex} names={state.players.map((p) => p.name)} />
       ) : game.game === "skocko" ? (

@@ -28,8 +28,10 @@ interface KzzSession extends BaseSession {
 const questions = readData<Pitanje[]>("ko-zna-zna/pitanja.json");
 const store = new SessionStore<KzzSession>(QUESTION_COUNT * SECONDS_PER_QUESTION + 60);
 
-function generate(): Puzzle {
-  return shuffle(questions)
+export function generate(usedQuestions: string[] = []): Puzzle {
+  const fresh = questions.filter((q) => !usedQuestions.includes(q.pitanje));
+  const pool = fresh.length >= QUESTION_COUNT ? fresh : questions;
+  return shuffle(pool)
     .slice(0, QUESTION_COUNT)
     .map((q) => {
       const options = shuffle([q.tacno, ...q.netacno]);
@@ -56,7 +58,7 @@ function createSession(puzzle: Puzzle, onFinish?: (r: GameResult) => void) {
 }
 
 export const koZnaZnaModule: GameModule<Puzzle> = {
-  generate,
+  generate: () => generate(),
   createSession,
   forceFinish(id) {
     const game = store.get(id);

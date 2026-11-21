@@ -72,7 +72,7 @@ function tryEvaluate(text: string): number | null {
   }
 }
 
-export default function MojBroj({ onExit, preset }: { onExit?: () => void; preset?: Config }) {
+export default function MojBroj({ onExit, preset, you }: { onExit?: () => void; preset?: Config; you?: number }) {
   const [config, setConfig] = useState<Config | null>(preset ?? null);
   const [tokens, setTokens] = useState<Token[]>([]);
   const [result, setResult] = useState<Result | null>(null);
@@ -126,31 +126,39 @@ export default function MojBroj({ onExit, preset }: { onExit?: () => void; prese
   }
   if (!config) return <main className="screen">Učitavanje…</main>;
 
+  const pretty = (e: string) => e.replace(/\*/g, "×").replace(/\//g, "÷");
+
   return (
-    <main className="screen">
+    <main className="screen moj-broj-screen">
       <GameHeader title="Moj broj" timeLeft={timeLeft} timeLimit={config.timeLimitSeconds} onExit={onExit} />
 
+      {/* Traženi broj, a u igri u dvoje ispod njega rezultati igrača (otkrivaju se na kraju) */}
       <div className="target">{config.target}</div>
+      {preset && (
+        <div className="value-bubbles">
+          <span className={`value-bubble bubble-p${you ?? 0}`}>???</span>
+          <span className={`value-bubble bubble-p${1 - (you ?? 0)}`}>???</span>
+        </div>
+      )}
 
-      <div className="numbers">
-        {config.numbers.map((n, i) => (
-          <button
-            key={i}
-            className={`number-button ${i >= 4 ? "big" : ""}`}
-            disabled={!!result || usedIndexes.has(i)}
-            onClick={() => setTokens([...tokens, { kind: "num", index: i }])}
-          >
-            {n}
+      <div className="word-box expression-box">
+        <span className="word-text">{tokens.length ? pretty(text) : ""}</span>
+        {!result && currentValue !== null && <span className="expression-value">= {currentValue}</span>}
+        {!result && tokens.length > 0 && (
+          <button className="word-backspace" onClick={() => setTokens(tokens.slice(0, -1))} aria-label="obriši">
+            ⌫
           </button>
-        ))}
+        )}
       </div>
 
-      <div className="expression">
-        <span>{tokens.length ? text.replace(/\*/g, "×").replace(/\//g, "÷") : "Složi izraz…"}</span>
-        <span className="expression-value">{currentValue !== null ? `= ${currentValue}` : ""}</span>
-      </div>
+      {!result && (
+        <button className="action wide mb-confirm" onClick={submit} disabled={busy}>
+          Potvrdi
+        </button>
+      )}
 
-      {result ? (
+      {/* Vežbanje: rezultat i rešenje kompjutera. U igri u dvoje poređenje prikazuje partija. */}
+      {result && !preset && (
         <div className="result">
           <p className="result-text">
             {result.points > 0
@@ -163,29 +171,44 @@ export default function MojBroj({ onExit, preset }: { onExit?: () => void; prese
                     ? "Vreme je isteklo."
                     : "Izraz nije složen."}
           </p>
-          <p className="best">
-            {result.best.value === result.target ? "Moguće rešenje" : `Najbliže moguće (${result.best.value})`}:{" "}
-            <strong>{result.best.expr.replace(/\*/g, "×").replace(/\//g, "÷")}</strong>
-          </p>
-          {!preset && <button className="action" onClick={start}>Nova partija</button>}
-        </div>
-      ) : (
-        <>
-          <div className="ops">
-            {OPS.map((op) => (
-              <button key={op} className="op-button" onClick={() => setTokens([...tokens, { kind: "op", value: op }])}>
-                {OP_LABEL[op] ?? op}
-              </button>
-            ))}
-            <button className="op-button" onClick={() => setTokens(tokens.slice(0, -1))} aria-label="obriši">
-              ⌫
-            </button>
+          <div className="compare">
+            <span className="compare-label">Kompjuter ({result.best.value}):</span>
+            <div className="word-box small">
+              <span className="word-text">{pretty(result.best.expr)}</span>
+            </div>
           </div>
-          <button className="action wide" onClick={submit} disabled={busy}>
-            Potvrdi
-          </button>
-        </>
+          <button className="action" onClick={start}>Nova partija</button>
+        </div>
       )}
+      {result && preset && result.invalidReason && <p className="word-check bad">✗ {result.invalidReason}</p>}
+
+      {/* Brojevi i operacije na dnu ekrana, da se lako klikću */}
+      <div className="mb-pad">
+        <div className="numbers">
+          {config.numbers.map((n, i) => (
+            <button
+              key={i}
+              className={`number-button ${i >= 4 ? "big" : ""}`}
+              disabled={!!result || usedIndexes.has(i)}
+              onClick={() => setTokens([...tokens, { kind: "num", index: i }])}
+            >
+              {n}
+            </button>
+          ))}
+        </div>
+        <div className="ops">
+          {OPS.map((op) => (
+            <button
+              key={op}
+              className="op-button"
+              disabled={!!result}
+              onClick={() => setTokens([...tokens, { kind: "op", value: op }])}
+            >
+              {OP_LABEL[op] ?? op}
+            </button>
+          ))}
+        </div>
+      </div>
     </main>
   );
 }

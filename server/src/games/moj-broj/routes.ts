@@ -28,7 +28,11 @@ export const mojBrojModule: GameModule<Puzzle> = {
   createSession,
   forceFinish(id) {
     const game = store.get(id);
-    if (game) store.complete(game, { points: 0, detail: { value: null, distance: null } });
+    if (game)
+      store.complete(game, {
+        points: 0,
+        detail: { value: null, distance: null, expression: "", best: solve(game.numbers, game.target) },
+      });
   },
   maxDurationSeconds: TIME_LIMIT_SECONDS,
 };
@@ -66,10 +70,10 @@ mojBrojRouter.post("/:id/submit", (req, res) => {
   }
 
   const points = pointsFor(value, game.target);
+  const best = solve(game.numbers, game.target);
   store.complete(game, {
     points,
-    detail: { value, distance: value === null ? null : Math.abs(value - game.target) },
+    detail: { value, distance: value === null ? null : Math.abs(value - game.target), expression, best },
   });
-  const best = solve(game.numbers, game.target);
   res.json({ value, invalidReason, timeUp, points, target: game.target, best });
 });

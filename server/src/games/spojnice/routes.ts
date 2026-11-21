@@ -25,8 +25,8 @@ interface SpojniceSession extends BaseSession {
 const sets = readData<SpojniceSet[]>("spojnice/spojnice.json");
 const store = new SessionStore<SpojniceSession>(TIME_LIMIT_SECONDS);
 
-export function generate(exceptTema?: string): Puzzle {
-  const pool = sets.filter((s) => s.tema !== exceptTema);
+export function generate(usedTeme: string[] = []): Puzzle {
+  const pool = sets.filter((s) => !usedTeme.includes(s.tema));
   const set = pickRandom(pool.length ? pool : sets);
   return { set, order: shuffle(set.parovi.map((_, i) => i)) };
 }

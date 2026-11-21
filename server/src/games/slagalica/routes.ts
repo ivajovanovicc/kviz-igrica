@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { BaseSession, GameModule, GameResult, SessionStore } from "../../shared/sessions.js";
+import { splitLetters } from "./letters.js";
 import { LETTER_COUNT, POINTS_PER_LETTER, TIME_LIMIT_SECONDS, isWord, loadDictionary, longestWord, randomLetters } from "./logic.js";
 
 interface SlagalicaSession extends BaseSession {
@@ -20,7 +21,12 @@ export const slagalicaModule: GameModule<string[]> = {
   createSession,
   forceFinish(id) {
     const game = store.get(id);
-    if (game) store.complete(game, { points: 0, detail: { word: "", length: 0, attempted: "", longest: longestWord(game.letters) } });
+    if (!game) return;
+    const longest = longestWord(game.letters);
+    store.complete(game, {
+      points: 0,
+      detail: { word: "", length: 0, attempted: "", longest, longestLength: longest ? splitLetters(longest).length : 0 },
+    });
   },
   maxDurationSeconds: TIME_LIMIT_SECONDS,
 };
@@ -73,7 +79,13 @@ slagalicaRouter.post("/:id/submit", (req, res) => {
   // u partiji u dvoje protivnik vidi i reč koja nije priznata (attempted), da bi mogli da uporede
   store.complete(game, {
     points,
-    detail: { word: accepted ? word : "", length: accepted ? letterCount : 0, attempted: word, longest },
+    detail: {
+      word: accepted ? word : "",
+      length: accepted ? letterCount : 0,
+      attempted: word,
+      longest,
+      longestLength: longest ? splitLetters(longest).length : 0,
+    },
   });
   res.json({ word, accepted, timeUp, points, longest });
 });

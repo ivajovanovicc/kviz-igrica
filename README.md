@@ -21,21 +21,20 @@ Zatim otvori http://localhost:5173 u browseru.
 
 ## Igra u dvoje
 
-Redosled: Slagalica, Moj broj, Skočko, Ko zna zna, Spojnice, Asocijacije, Asocijacije.
+Svaka igra se igra dva puta: Slagalica, Moj broj, Skočko, Ko zna zna, Spojnice, Asocijacije (ukupno 12 rundi).
+Prva runda svake igre je "igra" igrača 1 (koji je napravio partiju), druga igrača 2 ("moja igra"):
+vlasnik runde pobeđuje kad je izjednačeno, a u igrama na smenu igra prvi.
 
-- **Slagalica**: duža ispravna reč nosi 2 poena po slovu (iste dužine: oba igrača dobijaju poene).
-  Kad igrač 2 sekunde ne menja reč, piše da li reč postoji u rečniku.
-- **Moj broj**: tačan broj 10 poena; ako niko nije pogodio, bliži dobija 5.
+- **Slagalica**: 1 poen po slovu ispravne reči. Duža reč +6 (iste dužine: vlasnik runde).
+  Vlasnik runde dobija još +3 ako je našao reč dugačku kao najduža reč kompjutera.
+  Posle igre se vide obe reči i reč kompjutera.
+- **Moj broj**: poene dobija samo bliži rezultat: tačan broj 10, inače 5 (isto blizu: vlasnik runde).
+  Posle igre se vide rezultati i izrazi oba igrača, a ako niko nije pogodio i rešenje kompjutera.
 - **Skočko**: svako dobija poene koje je sam osvojio.
 - **Ko zna zna**: oba igrača istovremeno vide isto pitanje. Brži tačan odgovor +10, netačan −5.
-  Sledeće pitanje dolazi kad oba odgovore ili istekne vreme, a tačan odgovor se pre toga oboji žuto.
-- **Spojnice**: dve polovine sa različitim temama. Za svaki pojam prvo pokušava igrač koji je na redu (6 s);
-  ako promaši, isti pojam pokušava protivnik; zatim sledeći pojam, opet prvo igrač na redu.
-  U drugoj polovini je na redu drugi igrač. 2 poena po paru.
-- **Asocijacije** (dve igre) se igraju na smenu, na zajedničkoj tabli: igrač na potezu otvori polje, pa klikne na
-  polje rešenja i kuca odgovor, ili preda potez. Tačan odgovor: ostaje na potezu. Promašaj ili isteklo vreme (15 s):
-  potez prelazi na protivnika. Prvu Asocijaciju počinje igrač koji zaostaje, drugu onaj drugi.
-- Igrač na potezu je istaknut u gornjoj traci. Ako igrač osveži stranicu, vraća se u istu partiju.
+- **Spojnice**: za svaki pojam prvo pokušava vlasnik runde (6 s); ako promaši, isti pojam pokušava protivnik. 2 poena po paru.
+- **Asocijacije** se igraju na smenu, na zajedničkoj tabli. Prvi igra vlasnik runde.
+- Igrači imaju boje: igrač 1 plava, igrač 2 crvena. Ako igrač osveži stranicu, vraća se u istu partiju.
 
 Na lokalnom računaru drugi igrač se može probati u incognito prozoru. Za igru sa nekim preko interneta igricu treba
 postaviti na hosting.
